@@ -1,0 +1,4 @@
+1,Postcard (Single), 5
+2,Postcard (Bundle), 4
+3,Stickers (Single), 1
+4,Stickers (Bundle), 4
