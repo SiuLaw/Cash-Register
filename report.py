@@ -3,13 +3,12 @@ import csv
 import time
 dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
-print(dir_path)
 #os.chdir("/Users/Po/Desktop/Python/Convention")
 
 file = open('Report.csv','a+') 
 
 while True:
-    print("Starting from top")
+    print("Starting from beginning")
     
 ####################################################################################################
     
@@ -167,11 +166,11 @@ while True:
     print("Details: " + MerchInput )
     print("Price:   " + str(Price) )
 
-    submit = input("Confirm record sales? Y/N")
+    submit = input("Confirm record sales? Y/N" + "\n")
+    os.system("clear")
     if submit == "Y":
         file.write( output + "\n" ) 
     else:
-        os.system("clear")
         print("Sales not recorded, start again.")
         continue
     
