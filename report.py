@@ -32,21 +32,20 @@ def contain_in_box( string_list ):
     for y in range(0, y_max ):
         print_v_line( string_list[y], x_max)
     print_h_line( x_max + 4 )
+    
+def make_double_digit( input_val ):
+    if( input_val < 10 ):
+        return "0" + str( input_val )
+    else:
+        return str( input_val )
 
 
 ####################################################################################################
 
 this_time = time.localtime(time.time())
 year = str(this_time[0])
-if this_time[1] < 10:
-    mon = "0" + str(this_time[1])
-else:
-    mon = str(this_time[1])
-    
-if this_time[2] < 10:
-    day = "0" + str(this_time[2])
-else:
-    day = str(this_time[2])
+mon = make_double_digit( this_time[1] )
+day = make_double_digit( this_time[2] )
 
 this_date = year + "-" + mon + "-" + day
 record_file_name = "Report-" + this_date + ".csv"
@@ -219,12 +218,8 @@ while True:
 #Time
     localtime = time.localtime(time.time())
     hour = str(localtime[3])
-    
-    if localtime[4] < 10:
-        minute = "0" + str(localtime[4])
-    else:
-        minute = str(localtime[4])
-        
+    minute = make_double_digit( localtime[4] )
+
     this_time = hour + ":" + minute
     
     
@@ -251,9 +246,11 @@ while True:
         print("Sales not recorded, start again.")
         file.close()
     
-    Check = input("Press Y to end, enter to continue")
+    Check = input("Press Y to end, enter to continue" + "\n")
    
     if Check == "Y":
+        os.system("clear")
+        print("Cash register quitted successfully")
         break
     os.system("clear")
     
