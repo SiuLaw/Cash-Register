@@ -5,9 +5,9 @@ dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 #os.chdir("/Users/Po/Desktop/Python/Convention")
 
-file = open('Report.csv','a+') 
-
 while True:
+    file = open('Report.csv','a+')
+    
     print("\n" + "Starting from beginning")
     
 ####################################################################################################
@@ -100,7 +100,7 @@ while True:
                 
                 while True: #protection for AFTER choosing a alternatied pricing, THEN the second time choosing a merch type
                     try:
-                        PriceFile = open('PriceInput.txt','r')                
+                        PriceFiTle = open('PriceInput.txt','r')                
                         PriceInput = int( input("RESELECT:" + "\n" + "\n" + PriceFile.read() + "\n" + "\n" + "INPUT: "   ) ) - 1
                         Type = str(PriceTable[PriceInput][1])                     
                         PriceFile.close()
@@ -152,7 +152,6 @@ while True:
     
     
     output = this_time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
-    print(output)
     os.system("clear")
     
 ####################################################################################################
@@ -169,9 +168,11 @@ while True:
     submit = input("Confirm record sales? Y/N" + "\n")
     os.system("clear")
     if submit == "Y":
-        file.write( output + "\n" ) 
+        file.write( output + "\n" )
+        file.close()
     else:
         print("Sales not recorded, start again.")
+        file.close()
         continue
     
     
@@ -180,6 +181,4 @@ while True:
     if Check == "Y":
         break
     os.system("clear")
-    
-file.close()
     
