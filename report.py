@@ -1,8 +1,9 @@
 import os
 import csv
 import time
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
+print(dir_path)
 #os.chdir("/Users/Po/Desktop/Python/Convention")
 
 file = open('Report.csv','a+') 
@@ -15,7 +16,7 @@ while True:
 #Who is the seller
     while True:
         PersonFile = open('PersonInput.txt','r')
-        PersonInput = raw_input(PersonFile.read())
+        PersonInput = input(PersonFile.read())
         PersonFile.close()
         
         os.system("clear")
@@ -31,7 +32,7 @@ while True:
             break
             
         if PersonInput == "O":
-            PersonInput = raw_input("Type in name:")
+            PersonInput = input("Type in name:")
             os.system("clear")
             break
     
@@ -45,7 +46,7 @@ while True:
     while True:
         try:
             FandomFile = open('FandomInput.txt','r')
-            FandomInput = int(raw_input(FandomFile.read())) -1
+            FandomInput = int(input(FandomFile.read())) -1
             FandomFile.close()
             
             FandomFile = open('FandomInput.txt','r')
@@ -60,11 +61,11 @@ while True:
             
         except ValueError:
             os.system("clear")
-            print "Oops! Choose a number.  Try again..."
+            print("Oops! Choose a number.  Try again...")
             
         except IndexError:
             os.system("clear")
-            print "Oops! Choose a valid number. Try again..."
+            print("Oops! Choose a valid number. Try again...")
     
 
     
@@ -84,33 +85,33 @@ while True:
     while True:
         try:
             PriceFile = open('PriceInput.txt','r')
-            PriceInput = raw_input(PriceFile.read()+ "\n" + "\n" + "Or type 'O' for alternative pricing (e.g. sales)" +"\n" + "\n" + "\n" + "INPUT: ")
+            PriceInput = input(PriceFile.read()+ "\n" + "\n" + "Or type 'O' for alternative pricing (e.g. sales)" +"\n" + "\n" + "\n" + "INPUT: ")
             PriceFile.close()
             if PriceInput == "O":
                 os.system("clear")
                 while True: #protection for not numeric input for "alternated pricing"
                     try:
-                        NewPrice = raw_input("Type in alternated pricing:")
+                        NewPrice = input("Type in alternated pricing:")
                         Price = int(NewPrice)
                         break
                     except ValueError:
                         os.system("clear")
-                        print "Oops! Choose a number.  Try again..."
+                        print("Oops! Choose a number.  Try again...")
                     
                 
                 while True: #protection for AFTER choosing a alternatied pricing, THEN the second time choosing a merch type
                     try:
                         PriceFile = open('PriceInput.txt','r')                
-                        PriceInput = int( raw_input("RESELECT:" + "\n" + "\n" + PriceFile.read() + "\n" + "\n" + "INPUT: "   ) ) - 1
+                        PriceInput = int( input("RESELECT:" + "\n" + "\n" + PriceFile.read() + "\n" + "\n" + "INPUT: "   ) ) - 1
                         Type = str(PriceTable[PriceInput][1])                     
                         PriceFile.close()
                         break
                     except ValueError:
                         os.system("clear")
-                        print "Oops! Choose a number.  Try again..."
+                        print("Oops! Choose a number.  Try again...")
                     except IndexError:
                         os.system("clear")
-                        print "Oops! Choose a valid number. Try again..." 
+                        print("Oops! Choose a valid number. Try again...")
                         
             else:
                 PriceInput = int(PriceInput) - 1
@@ -123,18 +124,18 @@ while True:
             
         except ValueError:
             os.system("clear")
-            print "Oops! Choose a number.  Try again..."
+            print("Oops! Choose a number.  Try again...")
             
         except IndexError:
             os.system("clear")
-            print "Oops! Choose a valid number. Try again..."
+            print("Oops! Choose a valid number. Try again...")
          
 
     
 ####################################################################################################
     
 #Merch
-    MerchInput = raw_input("Input details, e.g. Persona characters name, if not leave blank: ")
+    MerchInput = input("Input details, e.g. Persona characters name, if not leave blank: ")
     os.system("clear")
     
 ####################################################################################################
@@ -166,7 +167,7 @@ while True:
     print("Details: " + MerchInput )
     print("Price:   " + str(Price) )
 
-    submit = raw_input("Confirm record sales? Y/N")
+    submit = input("Confirm record sales? Y/N")
     if submit == "Y":
         file.write( output + "\n" ) 
     else:
@@ -175,7 +176,7 @@ while True:
         continue
     
     
-    Check = raw_input("Press Y to end, enter to continue")
+    Check = input("Press Y to end, enter to continue")
    
     if Check == "Y":
         break
