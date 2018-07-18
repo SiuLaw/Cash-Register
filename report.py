@@ -8,7 +8,7 @@ os.chdir(dir_path)
 file = open('Report.csv','a+') 
 
 while True:
-    print("Starting from beginning")
+    print("\n" + "Starting from beginning")
     
 ####################################################################################################
     
@@ -140,7 +140,6 @@ while True:
 ####################################################################################################
     
 #Time
-    import time
     localtime = time.localtime(time.time())
     hour = str(localtime[3])
     
@@ -149,17 +148,18 @@ while True:
     else:
         minute = str(localtime[4])
         
-    time = hour + ":" + minute
+    this_time = hour + ":" + minute
     
     
-    output = time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
+    output = this_time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
+    print(output)
     os.system("clear")
     
 ####################################################################################################
     
 # print(output)
     
-    print("Time:    " + time)
+    print("Time:    " + this_time)
     print("Person:  " + PersonInput)
     print("Fandom:  " + Fandom)
     print("Type:    " + Type)
