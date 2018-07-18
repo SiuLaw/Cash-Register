@@ -5,8 +5,44 @@ dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 #os.chdir("/Users/Po/Desktop/Python/Convention")
 
+####################################################################################################
+
+this_time = time.localtime(time.time())
+year = str(this_time[0])
+if this_time[1] < 10:
+    mon = "0" + str(this_time[1])
+else:
+    mon = str(this_time[1])
+    
+if this_time[2] < 10:
+    day = "0" + str(this_time[2])
+else:
+    day = str(this_time[2])
+
+this_date = year + "-" + mon + "-" + day
+record_file_name = "Report-" + this_date + ".csv"
+record_file_name
+
+####################################################################################################
+
+file = open(record_file_name,"a+")
+file.close()
+
+file = open(record_file_name,"r+")
+if file.read() == "":
+    file.close()
+    
+    file = open(record_file_name,"a+")
+    file.write( "Time" + "," + "Person" + "," + "Franchise" + "," + "Merch. Type" + "," + "Detail" + "," + "Price" + "\n" )
+    file.close()
+    
+else:
+    file.close()
+
+####################################################################################################
+
 while True:
-    file = open('Report.csv','a+')
+    file = open(record_file_name,'a+')
     
     print("\n" + "Starting from beginning")
     
