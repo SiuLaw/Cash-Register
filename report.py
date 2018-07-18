@@ -7,6 +7,35 @@ os.chdir(dir_path)
 
 ####################################################################################################
 
+
+
+def print_h_line( line_length ):
+    print_string = ""
+    for i in range(0, line_length):
+        print_string += "-"
+    print( print_string )
+    
+def print_v_line( string, x_max ):
+    print_string = "| " + string
+    while len(print_string) < x_max + 3:
+        print_string += " "
+    print_string += "|"
+    print( print_string )
+    
+def contain_in_box( string_list ):
+    y_max = len( string_list )
+    x_max = 0
+    for y in range(0, y_max ):
+        x_max = max(x_max, len(string_list[y]) )
+    
+    print_h_line( x_max + 4 )
+    for y in range(0, y_max ):
+        print_v_line( string_list[y], x_max)
+    print_h_line( x_max + 4 )
+
+
+####################################################################################################
+
 this_time = time.localtime(time.time())
 year = str(this_time[0])
 if this_time[1] < 10:
@@ -42,6 +71,8 @@ else:
 ####################################################################################################
 
 while True:
+    
+    os.system("clear")
     file = open(record_file_name,'a+')
     
     print("\n" + "Starting from beginning")
@@ -80,6 +111,8 @@ while True:
     
     while True:
         try:
+            contain_in_box( ["Person:  " + PersonInput] )
+            
             FandomFile = open('FandomInput.txt','r')
             FandomInput = int(input(FandomFile.read())) -1
             FandomFile.close()
@@ -119,6 +152,8 @@ while True:
     
     while True:
         try:
+            contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
+            
             PriceFile = open('PriceInput.txt','r')
             PriceInput = input(PriceFile.read()+ "\n" + "\n" + "Or type 'O' for alternative pricing (e.g. sales)" +"\n" + "\n" + "\n" + "INPUT: ")
             PriceFile.close()
@@ -126,6 +161,8 @@ while True:
                 os.system("clear")
                 while True: #protection for not numeric input for "alternated pricing"
                     try:
+                        contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
+                        
                         NewPrice = input("Type in alternated pricing:")
                         Price = int(NewPrice)
                         break
@@ -136,7 +173,10 @@ while True:
                 
                 while True: #protection for AFTER choosing a alternatied pricing, THEN the second time choosing a merch type
                     try:
-                        PriceFiTle = open('PriceInput.txt','r')                
+                        os.system("clear")
+                        contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom, "Price:   " + str(Price) ] )
+                        
+                        PriceFile = open('PriceInput.txt','r')                
                         PriceInput = int( input("RESELECT:" + "\n" + "\n" + PriceFile.read() + "\n" + "\n" + "INPUT: "   ) ) - 1
                         Type = str(PriceTable[PriceInput][1])                     
                         PriceFile.close()
@@ -155,6 +195,7 @@ while True:
                         
             PriceFile.close()
             os.system("clear")
+            contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom, "Type:    " + Type, "Price:   " + str(Price) ] )
             break
             
         except ValueError:
@@ -194,12 +235,12 @@ while True:
     
 # print(output)
     
-    print("Time:    " + this_time)
-    print("Person:  " + PersonInput)
-    print("Fandom:  " + Fandom)
-    print("Type:    " + Type)
-    print("Details: " + MerchInput )
-    print("Price:   " + str(Price) )
+    contain_in_box( [    "Time:    " + this_time,
+                         "Person:  " + PersonInput,
+                         "Fandom:  " + Fandom,
+                         "Type:    " + Type,
+                         "Details: " + MerchInput,
+                         "Price:   " + str(Price) ] )
 
     submit = input("Confirm record sales? Y/N" + "\n")
     os.system("clear")
@@ -209,8 +250,6 @@ while True:
     else:
         print("Sales not recorded, start again.")
         file.close()
-        continue
-    
     
     Check = input("Press Y to end, enter to continue")
    
