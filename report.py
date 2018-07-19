@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import csv
 import time
@@ -67,6 +68,81 @@ if file.read() == "":
 else:
     file.close()
 
+
+####################################################################################################
+    
+def take_csv_return_table( csv_name ):
+    File = open( csv_name,'r')
+    Table = []
+    FileCSV = csv.reader(File, delimiter=",")
+    for line in FileCSV:
+        Table.append(line)
+    File.close()
+    return Table
+    
+
+def take_csv_ask_input( csv_name ):
+    Table = take_csv_return_table( csv_name )
+
+    still_matching = True
+    while still_matching:
+        # ask for input
+        File = open( csv_name, "r")
+        Input = input( File.read() + "\n"+ "\n" + "INPUT: ")
+        File.close()
+
+        for row in Table:
+            if( Input == row[0] ):
+                Output = row[1]
+                os.system("clear")
+                still_matching = False
+                break
+                
+        if still_matching == False:
+            break
+            
+        os.system("clear")
+        print("Unrecognised option, try again")
+    
+    return Output
+    
+def take_csv_ask_input_with_alter( csv_name ):
+    Table = take_csv_return_table( csv_name )
+
+    still_matching = True
+    while still_matching:
+        # ask for input
+        File = open( csv_name, "r")
+        Input = input( File.read() + "\n"+ "\n" + "INPUT: ")
+        File.close()
+
+        for row in Table:
+            if( Input == row[0] ):
+                Output = row[1]
+                os.system("clear")
+                still_matching = False
+                break
+                
+        if still_matching == False:
+            break
+        else:
+            os.system("clear")
+            alter_input_confirmation = input( "Unrecognised option: '" + Input + "', would you like to use this as the input instead? Y/N" + "\n" )
+        
+        if( alter_input_confirmation == "Y" ):
+            Output = Input
+            os.system("clear")
+            print( "Alternative input '" + Input + "' has been used:")
+            break
+        
+        os.system("clear")
+        print("Unrecognised option: '" + Input + "' was not used, choose again")
+    
+    return Output
+    
+    
+        
+
 ####################################################################################################
 
 while True:
@@ -74,65 +150,73 @@ while True:
     os.system("clear")
     file = open(record_file_name,'a+')
     
-    print("\n" + "Starting from beginning")
+    print("Starting from beginning")
     
 ####################################################################################################
+        
+
     
 #Who is the seller
-    while True:
-        PersonFile = open('PersonInput.txt','r')
-        PersonInput = input(PersonFile.read()+"\n"+"\n" + "INPUT: ")
-        PersonFile.close()
-        
-        os.system("clear")
-        
-        if PersonInput == "F":
-            PersonInput = "Fork"
-            os.system("clear")
-            break
-            
-        if PersonInput == "L":
-            PersonInput = "Lee"
-            os.system("clear")
-            break
-            
-        if PersonInput == "O":
-            PersonInput = input("Type in name:")
-            os.system("clear")
-            break
+    # while True:
+    #     PersonFile = open('PersonInput.txt','r')
+    #     PersonInput = input(PersonFile.read()+"\n"+"\n" + "INPUT: ")
+    #     PersonFile.close()
+    #     
+    #     os.system("clear")       
+    #     
+    #     if PersonInput == "F":
+    #         PersonInput = "Fork"
+    #         os.system("clear")
+    #         break
+    #         
+    #     if PersonInput == "L":
+    #         PersonInput = "Lee"
+    #         os.system("clear")
+    #         break
+    #         
+    #     if PersonInput == "O":
+    #         PersonInput = input("Type in name:")
+    #         os.system("clear")
+    #         break
+    # 
+    #     print("Unrecognised person, type 'O' for others")
     
-        print("Unrecognised person, type 'O' for others")
+    
+    PersonInput = take_csv_ask_input_with_alter( 'PersonInput.txt' )
     
     
 ####################################################################################################
     
 #What is the Fandom
     
-    while True:
-        try:
-            contain_in_box( ["Person:  " + PersonInput] )
+    # FandomFile = open('FandomInput.txt','r')
+    # FandomTable = []
+    # FandomCSV = csv.reader(FandomFile, delimiter=",")
+    # for line in FandomCSV:
+    #     FandomTable.append(line)
+    # FandomFile.close()
+    # 
+    # while True:
+    #     try:
+    #         contain_in_box( ["Person:  " + PersonInput] )
+    #         
+    #         FandomFile = open('FandomInput.txt','r')
+    #         FandomInput = int(input(FandomFile.read()+"\n"+"\n" + "INPUT: ")) -1
+    #         FandomFile.close()
+    #     
+    #         Fandom = str(FandomTable[FandomInput][1])
+    #         os.system("clear")
+    #         break
+    #         
+    #     except ValueError:
+    #         os.system("clear")
+    #         print("Oops! Choose a number.  Try again...")
+    #         
+    #     except IndexError:
+    #         os.system("clear")
+    #         print("Oops! Choose a valid number. Try again...")
             
-            FandomFile = open('FandomInput.txt','r')
-            FandomInput = int(input(FandomFile.read()+"\n"+"\n" + "INPUT: ")) -1
-            FandomFile.close()
-            
-            FandomFile = open('FandomInput.txt','r')
-            FandomTable = []
-            FandomCSV = csv.reader(FandomFile, delimiter=",")
-            for line in FandomCSV:
-                FandomTable.append(line)
-        
-            Fandom = str(FandomTable[FandomInput][1])
-            os.system("clear")
-            break
-            
-        except ValueError:
-            os.system("clear")
-            print("Oops! Choose a number.  Try again...")
-            
-        except IndexError:
-            os.system("clear")
-            print("Oops! Choose a valid number. Try again...")
+    Fandom = take_csv_ask_input_with_alter( 'FandomInput.txt' )
     
 
     
@@ -146,8 +230,6 @@ while True:
     for line in PriceCSV:
         PriceTable.append(line)
     PriceFile.close()
-    
-    
     
     while True:
         try:
