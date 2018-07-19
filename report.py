@@ -81,7 +81,7 @@ while True:
 #Who is the seller
     while True:
         PersonFile = open('PersonInput.txt','r')
-        PersonInput = input(PersonFile.read())
+        PersonInput = input(PersonFile.read()+"\n"+"\n" + "INPUT: ")
         PersonFile.close()
         
         os.system("clear")
@@ -113,7 +113,7 @@ while True:
             contain_in_box( ["Person:  " + PersonInput] )
             
             FandomFile = open('FandomInput.txt','r')
-            FandomInput = int(input(FandomFile.read())) -1
+            FandomInput = int(input(FandomFile.read()+"\n"+"\n" + "INPUT: ")) -1
             FandomFile.close()
             
             FandomFile = open('FandomInput.txt','r')
