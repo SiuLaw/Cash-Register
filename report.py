@@ -151,7 +151,7 @@ def take_csv_ask_input_with_alter( csv_name ):
         os.system("clear")
         print("Unrecognised option: '" + Input + "' was not used, choose again")
     
-    return Output
+    return str(Output)
     
 
 def main():
@@ -246,7 +246,7 @@ def main():
         
         while True:
             try:
-                contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
+                contain_in_box( ["Person:  " + str(PersonInput), "Fandom:  " + Fandom] )
                 
                 PriceFile = open('PriceInput.txt','r')
                 PriceInput = input(PriceFile.read()+ "\n" + "\n" + "Or type 'O' for alternative pricing (e.g. sales)" +"\n" + "\n" + "\n" + "INPUT: ")
