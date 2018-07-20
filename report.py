@@ -142,197 +142,200 @@ def take_csv_ask_input_with_alter( csv_name ):
     
     
         
-
-####################################################################################################
-
-while True:
-    
-    os.system("clear")
-    file = open(record_file_name,'a+')
-    
-    print("Starting from beginning")
-    
-####################################################################################################
-        
-
-    
-#Who is the seller
-    # while True:
-    #     PersonFile = open('PersonInput.txt','r')
-    #     PersonInput = input(PersonFile.read()+"\n"+"\n" + "INPUT: ")
-    #     PersonFile.close()
-    #     
-    #     os.system("clear")       
-    #     
-    #     if PersonInput == "F":
-    #         PersonInput = "Fork"
-    #         os.system("clear")
-    #         break
-    #         
-    #     if PersonInput == "L":
-    #         PersonInput = "Lee"
-    #         os.system("clear")
-    #         break
-    #         
-    #     if PersonInput == "O":
-    #         PersonInput = input("Type in name:")
-    #         os.system("clear")
-    #         break
-    # 
-    #     print("Unrecognised person, type 'O' for others")
-    
-    
-    PersonInput = take_csv_ask_input_with_alter( 'PersonInput.txt' )
-    
-    
-####################################################################################################
-    
-#What is the Fandom
-    
-    # FandomFile = open('FandomInput.txt','r')
-    # FandomTable = []
-    # FandomCSV = csv.reader(FandomFile, delimiter=",")
-    # for line in FandomCSV:
-    #     FandomTable.append(line)
-    # FandomFile.close()
-    # 
-    # while True:
-    #     try:
-    #         contain_in_box( ["Person:  " + PersonInput] )
-    #         
-    #         FandomFile = open('FandomInput.txt','r')
-    #         FandomInput = int(input(FandomFile.read()+"\n"+"\n" + "INPUT: ")) -1
-    #         FandomFile.close()
-    #     
-    #         Fandom = str(FandomTable[FandomInput][1])
-    #         os.system("clear")
-    #         break
-    #         
-    #     except ValueError:
-    #         os.system("clear")
-    #         print("Oops! Choose a number.  Try again...")
-    #         
-    #     except IndexError:
-    #         os.system("clear")
-    #         print("Oops! Choose a valid number. Try again...")
-            
-    Fandom = take_csv_ask_input_with_alter( 'FandomInput.txt' )
-    
-
-    
-####################################################################################################
-    
-#What Price
-    
-    PriceFile = open('PriceInput.txt','r')
-    PriceTable = []
-    PriceCSV = csv.reader(PriceFile, delimiter=",")
-    for line in PriceCSV:
-        PriceTable.append(line)
-    PriceFile.close()
+def main():
+    ####################################################################################################
     
     while True:
-        try:
-            contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
-            
-            PriceFile = open('PriceInput.txt','r')
-            PriceInput = input(PriceFile.read()+ "\n" + "\n" + "Or type 'O' for alternative pricing (e.g. sales)" +"\n" + "\n" + "\n" + "INPUT: ")
-            PriceFile.close()
-            if PriceInput == "O":
-                os.system("clear")
-                while True: #protection for not numeric input for "alternated pricing"
-                    try:
-                        contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
-                        
-                        NewPrice = input("Type in alternated pricing:")
-                        Price = int(NewPrice)
-                        break
-                    except ValueError:
-                        os.system("clear")
-                        print("Oops! Choose a number.  Try again...")
-                    
-                
-                while True: #protection for AFTER choosing a alternatied pricing, THEN the second time choosing a merch type
-                    try:
-                        os.system("clear")
-                        contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom, "Price:   " + str(Price) ] )
-                        
-                        PriceFile = open('PriceInput.txt','r')                
-                        PriceInput = int( input("RESELECT:" + "\n" + "\n" + PriceFile.read() + "\n" + "\n" + "INPUT: "   ) ) - 1
-                        Type = str(PriceTable[PriceInput][1])                     
-                        PriceFile.close()
-                        break
-                    except ValueError:
-                        os.system("clear")
-                        print("Oops! Choose a number.  Try again...")
-                    except IndexError:
-                        os.system("clear")
-                        print("Oops! Choose a valid number. Try again...")
-                        
-            else:
-                PriceInput = int(PriceInput) - 1
-                Price = int(PriceTable[PriceInput][2])
-                Type = str(PriceTable[PriceInput][1])
-                        
-            PriceFile.close()
-            os.system("clear")
-            contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom, "Type:    " + Type, "Price:   " + str(Price) ] )
-            break
-            
-        except ValueError:
-            os.system("clear")
-            print("Oops! Choose a number.  Try again...")
-            
-        except IndexError:
-            os.system("clear")
-            print("Oops! Choose a valid number. Try again...")
-         
-
-    
-####################################################################################################
-    
-#Merch
-    MerchInput = input("Input details, e.g. Persona characters name, if not leave blank: ")
-    os.system("clear")
-    
-####################################################################################################
-    
-#Time
-    localtime = time.localtime(time.time())
-    hour = str(localtime[3])
-    minute = make_double_digit( localtime[4] )
-
-    this_time = hour + ":" + minute
-    
-    
-    output = this_time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
-    os.system("clear")
-    
-####################################################################################################
-    
-# print(output)
-    
-    contain_in_box( [    "Time:    " + this_time,
-                         "Person:  " + PersonInput,
-                         "Fandom:  " + Fandom,
-                         "Type:    " + Type,
-                         "Details: " + MerchInput,
-                         "Price:   " + str(Price) ] )
-
-    submit = input("Confirm record sales? Y/N" + "\n")
-    os.system("clear")
-    if submit == "Y":
-        file.write( output + "\n" )
-        file.close()
-    else:
-        print("Sales not recorded, start again.")
-        file.close()
-    
-    Check = input("Press Y to end, enter to continue" + "\n")
-   
-    if Check == "Y":
+        
         os.system("clear")
-        print("Cash register quitted successfully")
-        break
-    os.system("clear")
+        file = open(record_file_name,'a+')
+        
+        print("Starting from beginning")
+        
+    ####################################################################################################
+            
+    
+        
+    #Who is the seller
+        # while True:
+        #     PersonFile = open('PersonInput.txt','r')
+        #     PersonInput = input(PersonFile.read()+"\n"+"\n" + "INPUT: ")
+        #     PersonFile.close()
+        #     
+        #     os.system("clear")       
+        #     
+        #     if PersonInput == "F":
+        #         PersonInput = "Fork"
+        #         os.system("clear")
+        #         break
+        #         
+        #     if PersonInput == "L":
+        #         PersonInput = "Lee"
+        #         os.system("clear")
+        #         break
+        #         
+        #     if PersonInput == "O":
+        #         PersonInput = input("Type in name:")
+        #         os.system("clear")
+        #         break
+        # 
+        #     print("Unrecognised person, type 'O' for others")
+        
+        
+        PersonInput = take_csv_ask_input_with_alter( 'PersonInput.txt' )
+        
+        
+    ####################################################################################################
+        
+    #What is the Fandom
+        
+        # FandomFile = open('FandomInput.txt','r')
+        # FandomTable = []
+        # FandomCSV = csv.reader(FandomFile, delimiter=",")
+        # for line in FandomCSV:
+        #     FandomTable.append(line)
+        # FandomFile.close()
+        # 
+        # while True:
+        #     try:
+        #         contain_in_box( ["Person:  " + PersonInput] )
+        #         
+        #         FandomFile = open('FandomInput.txt','r')
+        #         FandomInput = int(input(FandomFile.read()+"\n"+"\n" + "INPUT: ")) -1
+        #         FandomFile.close()
+        #     
+        #         Fandom = str(FandomTable[FandomInput][1])
+        #         os.system("clear")
+        #         break
+        #         
+        #     except ValueError:
+        #         os.system("clear")
+        #         print("Oops! Choose a number.  Try again...")
+        #         
+        #     except IndexError:
+        #         os.system("clear")
+        #         print("Oops! Choose a valid number. Try again...")
+                
+        Fandom = take_csv_ask_input_with_alter( 'FandomInput.txt' )
+        
+    
+        
+    ####################################################################################################
+        
+    #What Price
+        
+        PriceFile = open('PriceInput.txt','r')
+        PriceTable = []
+        PriceCSV = csv.reader(PriceFile, delimiter=",")
+        for line in PriceCSV:
+            PriceTable.append(line)
+        PriceFile.close()
+        
+        while True:
+            try:
+                contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
+                
+                PriceFile = open('PriceInput.txt','r')
+                PriceInput = input(PriceFile.read()+ "\n" + "\n" + "Or type 'O' for alternative pricing (e.g. sales)" +"\n" + "\n" + "\n" + "INPUT: ")
+                PriceFile.close()
+                if PriceInput == "O":
+                    os.system("clear")
+                    while True: #protection for not numeric input for "alternated pricing"
+                        try:
+                            contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom] )
+                            
+                            NewPrice = input("Type in alternated pricing:")
+                            Price = int(NewPrice)
+                            break
+                        except ValueError:
+                            os.system("clear")
+                            print("Oops! Choose a number.  Try again...")
+                        
+                    
+                    while True: #protection for AFTER choosing a alternatied pricing, THEN the second time choosing a merch type
+                        try:
+                            os.system("clear")
+                            contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom, "Price:   " + str(Price) ] )
+                            
+                            PriceFile = open('PriceInput.txt','r')                
+                            PriceInput = int( input("RESELECT:" + "\n" + "\n" + PriceFile.read() + "\n" + "\n" + "INPUT: "   ) ) - 1
+                            Type = str(PriceTable[PriceInput][1])                     
+                            PriceFile.close()
+                            break
+                        except ValueError:
+                            os.system("clear")
+                            print("Oops! Choose a number.  Try again...")
+                        except IndexError:
+                            os.system("clear")
+                            print("Oops! Choose a valid number. Try again...")
+                            
+                else:
+                    PriceInput = int(PriceInput) - 1
+                    Price = int(PriceTable[PriceInput][2])
+                    Type = str(PriceTable[PriceInput][1])
+                            
+                PriceFile.close()
+                os.system("clear")
+                contain_in_box( ["Person:  " + PersonInput, "Fandom:  " + Fandom, "Type:    " + Type, "Price:   " + str(Price) ] )
+                break
+                
+            except ValueError:
+                os.system("clear")
+                print("Oops! Choose a number.  Try again...")
+                
+            except IndexError:
+                os.system("clear")
+                print("Oops! Choose a valid number. Try again...")
+            
+    
+        
+    ####################################################################################################
+        
+    #Merch
+        MerchInput = input("Input details, e.g. Persona characters name, if not leave blank: ")
+        os.system("clear")
+        
+    ####################################################################################################
+        
+    #Time
+        localtime = time.localtime(time.time())
+        hour = str(localtime[3])
+        minute = make_double_digit( localtime[4] )
+    
+        this_time = hour + ":" + minute
+        
+        
+        output = this_time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
+        os.system("clear")
+        
+    ####################################################################################################
+        
+    # print(output)
+        
+        contain_in_box( [    "Time:    " + this_time,
+                            "Person:  " + PersonInput,
+                            "Fandom:  " + Fandom,
+                            "Type:    " + Type,
+                            "Details: " + MerchInput,
+                            "Price:   " + str(Price) ] )
+    
+        submit = input("Confirm record sales? Y/N" + "\n")
+        os.system("clear")
+        if submit == "Y":
+            file.write( output + "\n" )
+            file.close()
+        else:
+            print("Sales not recorded, start again.")
+            file.close()
+        
+        Check = input("Press Y to end, enter to continue" + "\n")
+    
+        if Check == "Y":
+            os.system("clear")
+            print("Cash register quitted successfully")
+            break
+        os.system("clear")
+        
+if __name__ == "__main__":
+    main()
     
