@@ -161,7 +161,6 @@ def main():
     
     while True:
         
-        os.system("clear")
         file = open(record_file_name,'a+')
         
         print("Starting from beginning")
