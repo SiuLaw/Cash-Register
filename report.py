@@ -6,6 +6,31 @@ dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 #os.chdir("/Users/Po/Desktop/Python/Convention")
 
+def file_initialization():
+    this_time = time.localtime(time.time())
+    year = str(this_time[0])
+    mon = make_double_digit( this_time[1] )
+    day = make_double_digit( this_time[2] )
+    
+    this_date = year + "-" + mon + "-" + day
+    record_file_name = "Report-" + this_date + ".csv"
+    
+    file = open(record_file_name,"a+")
+    file.close()
+    
+    file = open(record_file_name,"r+")
+    if file.read() == "":
+        file.close()
+        
+        file = open(record_file_name,"a+")
+        file.write( "Time" + "," + "Person" + "," + "Franchise" + "," + "Merch. Type" + "," + "Detail" + "," + "Price" + "\n" )
+        file.close()
+        
+    else:
+        file.close()
+        
+    return record_file_name
+
 ####################################################################################################
 
 
@@ -40,36 +65,24 @@ def make_double_digit( input_val ):
     else:
         return str( input_val )
 
-
 ####################################################################################################
 
-this_time = time.localtime(time.time())
-year = str(this_time[0])
-mon = make_double_digit( this_time[1] )
-day = make_double_digit( this_time[2] )
+def get_time():
+    localtime = time.localtime(time.time())
+    hour = str(localtime[3])
+    minute = make_double_digit( localtime[4] )
 
-this_date = year + "-" + mon + "-" + day
-record_file_name = "Report-" + this_date + ".csv"
-record_file_name
-
-####################################################################################################
-
-file = open(record_file_name,"a+")
-file.close()
-
-file = open(record_file_name,"r+")
-if file.read() == "":
-    file.close()
+    this_time = hour + ":" + minute
     
-    file = open(record_file_name,"a+")
-    file.write( "Time" + "," + "Person" + "," + "Franchise" + "," + "Merch. Type" + "," + "Detail" + "," + "Price" + "\n" )
-    file.close()
-    
-else:
-    file.close()
-
+    return this_time
 
 ####################################################################################################
+    
+def find_match_in_table_with_index(match, table, offset_int):
+    for row in table:
+        if( row[0] == match ):
+            return row[offset_int]
+    return "ERR"
     
 def take_csv_return_table( csv_name ):
     File = open( csv_name,'r')
@@ -140,10 +153,11 @@ def take_csv_ask_input_with_alter( csv_name ):
     
     return Output
     
-    
-        
+
 def main():
     ####################################################################################################
+    
+    record_file_name = file_initialization()
     
     while True:
         
@@ -298,13 +312,7 @@ def main():
     ####################################################################################################
         
     #Time
-        localtime = time.localtime(time.time())
-        hour = str(localtime[3])
-        minute = make_double_digit( localtime[4] )
-    
-        this_time = hour + ":" + minute
-        
-        
+        this_time = get_time()
         output = this_time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
         os.system("clear")
         
