@@ -5,28 +5,37 @@ import os
 import tkinter as tk
 import tkinter.messagebox as tkm
 
-
-
 dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 
-def update_price():
-    pri_v.set( int( find_match_in_table_with_index( typ_v.get(), pri_table, 2 ) ))
-    root.update()
+root = tk.Tk()
+root.title("Cashier")
+root.resizable(width=False, height=False) #do not let outer window be resized
 
 record_file_name = file_initialization()
 per_table = take_csv_return_table( 'PersonInput.txt' )
 fan_table = take_csv_return_table( 'FandomInput.txt' )
 pri_table = take_csv_return_table( 'PriceInput.txt' )
 
+per_v = tk.StringVar()
+per_v.set(per_table[0][0])
+fan_v = tk.StringVar()
+fan_v.set(fan_table[0][0])
+typ_v = tk.StringVar()
+typ_v.set(pri_table[0][0])
+
+pri_v = tk.IntVar()
+pri_v.set(-1)
+
+alt_v = tk.IntVar()
+alt_v.set(1)
 
 
+def update_price():
+    pri_v.set( int( find_match_in_table_with_index( typ_v.get(), pri_table, 2 ) ))
+    root.update()
 
 
-root = tk.Tk()
-
-root.title("Cashier")
-root.resizable(width=False, height=False) #do not let outer window be resized
 
 row_names = ["Person","Fandom","Type","Detail","Price(GBP)"]
 r = 0
@@ -42,20 +51,6 @@ typ_frame = tk.Frame(root)
 pri_frame = tk.Frame(root)
 sub_frame = tk.Frame(root)
 ent_frame = tk.Frame(root)
-
-per_v = tk.StringVar()
-per_v.set(per_table[0][0])
-fan_v = tk.StringVar()
-fan_v.set(fan_table[0][0])
-typ_v = tk.StringVar()
-typ_v.set(pri_table[0][0])
-
-pri_v = tk.IntVar()
-pri_v.set(-1)
-
-alt_v = tk.IntVar()
-alt_v.set(1)
-
 
 
 

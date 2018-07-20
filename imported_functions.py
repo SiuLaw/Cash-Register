@@ -25,7 +25,7 @@ def mdd( input_val ):
     
 def find_match_in_table_with_index(match, table, offset_int):
     for row in table:
-        # if( row[0] == match ):
+        if( row[0] == match ):
             return row[offset_int]
     return "ERR"
     
