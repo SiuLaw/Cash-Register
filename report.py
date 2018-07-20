@@ -161,7 +161,7 @@ def main():
     
     while True:
         
-        file = open(record_file_name,'a+')
+        file = open(record_file_name,"a+")
         
         print("Starting from beginning")
         
@@ -313,7 +313,6 @@ def main():
     #Time
         this_time = get_time()
         output = this_time + ',' + PersonInput + ',' + Fandom + ',' + Type + ',' + MerchInput + ',' + str(Price)
-        os.system("clear")
         
     ####################################################################################################
         
@@ -325,7 +324,7 @@ def main():
                             "Type:    " + Type,
                             "Details: " + MerchInput,
                             "Price:   " + str(Price) ] )
-    
+        submit = "N"
         submit = input("Confirm record sales? Y/N" + "\n")
         os.system("clear")
         if submit == "Y":
