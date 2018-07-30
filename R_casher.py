@@ -61,6 +61,14 @@ stockItemAttribute = defaultStockItem.makeAttributeList()
 stockItemAttributeLength = defaultStockItem.lenAttribute()
 
 ############################################################################################################################
+
+
+
+
+
+
+
+############################################################################################################################
 #TKinter
 root = Tk()
 Label(root, text='Stock list').grid(row = 0,column =3)
@@ -85,12 +93,12 @@ while i < stockItemAttributeLength:
 
 #For Input new item as an object
 def storeInput():
+    newStockAttr = []
     i = 0
-    newStock = []
     while i < stockItemAttributeLength:
-        newStock.append(boxes[i].get() )
+        newStockAttr.append(boxes[i].get() )
         i +=1
-    newStock = stockItem(newStock[0],newStock[1],newStock[2],newStock[3],newStock[4],newStock[5],newStock[6])
+    newStock = stockItem(newStockAttr[0],newStockAttr[1],newStockAttr[2],newStockAttr[3],newStockAttr[4],newStockAttr[5],newStockAttr[6])
     newStock.storeNewStock()
     newStock.convertIntoList()
 
