@@ -5,7 +5,7 @@ from tkinter import *
 dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 
-stockItemAttribute = ["seller","fandom","maintype","bundle","price","details","stock"]
+stockItemAttr = ["seller","fandom","maintype","bundle","price","details","stock"]
 
 ############################################################################################################################
 #MAIN CLASS
@@ -18,13 +18,13 @@ class Item:
         self.price = price
         self.details = details
     
-    def makeAttributeList(self): 
-        attributeList = list(self.__dict__.keys()) 
-        return attributeList
+    def makeAttrList(self): 
+        attrList = list(self.__dict__.keys()) 
+        return attrList
     
-    def lenAttribute(self):
-        attributeLength = len(list(self.__dict__.keys()))
-        return attributeLength
+    def lenAttr(self):
+        attrLength = len(list(self.__dict__.keys()))
+        return attrLength
 
 #SUB CLASS
 class stockItem(Item):
@@ -36,9 +36,9 @@ class stockItem(Item):
         if( os.path.isfile("stock.csv") == False ):
             file = open("stock.csv","a+")
             text = ""
-            for i in range( stockItemAttributeLength ) :
-                text += stockItemAttribute[i].capitalize() 
-                if i < stockItemAttributeLength - 1:
+            for i in range( stockItemAttrLength ) :
+                text += stockItemAttr[i].capitalize() 
+                if i < stockItemAttrLength - 1:
                     text += ","
             file.write(text)
             file.close
@@ -47,11 +47,6 @@ class stockItem(Item):
         text = "\n{},{},{},{},{},{},{}".format(self.seller,self.fandom,self.maintype,self.bundle,self.price,self.details,self.stock)
         file.write(text)
         file.close
-        
-    def convertIntoList(self):
-        listTemp = []
-        listTemp = [self.seller,self.fandom,self.maintype,self.bundle,self.price,self.details,self.stock]
-        return listTemp
 
 class salesItem(Item):
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-", discount = False, alternativePrice = 0):
@@ -68,8 +63,8 @@ def readFile(x):
 
 #Deafult StockItem
 defaultStockItem = stockItem()
-# stockItemAttribute = defaultStockItem.makeAttributeList()
-stockItemAttributeLength = defaultStockItem.lenAttribute()
+# stockItemAttr = defaultStockItem.makeAttrList()
+stockItemAttrLength = defaultStockItem.lenAttr()
 
 ############################################################################################################################
 
@@ -86,8 +81,8 @@ Label(root, text='Stock list').grid(row = 0,column =3)
 
 #For Labels
 i = 0
-while i < stockItemAttributeLength:
-    title = str(stockItemAttribute[i]).capitalize() 
+while i < stockItemAttrLength:
+    title = str(stockItemAttr[i]).capitalize() 
     Label(root,text=title).grid(row=1,column = i)
     Label(root,text=title).grid(row=3,column = i)
     i += 1
@@ -95,7 +90,7 @@ while i < stockItemAttributeLength:
 #For Entries
 i = 0
 boxes = []
-while i < stockItemAttributeLength:
+while i < stockItemAttrLength:
     entry = Entry(root)
     entry.grid(row=4, column=i)
     istr = str(i)
@@ -106,13 +101,11 @@ while i < stockItemAttributeLength:
 def storeInput():
     newStockAttr = []
     i = 0
-    while i < stockItemAttributeLength:
+    while i < stockItemAttrLength:
         newStockAttr.append(boxes[i].get() )
         i +=1
     newStock = stockItem(newStockAttr[0],newStockAttr[1],newStockAttr[2],newStockAttr[3],newStockAttr[4],newStockAttr[5],newStockAttr[6])
     newStock.storeNewStock()
-    newStock.convertIntoList()
-
 
 Button(root,text = "Input", command=storeInput).grid(row=5)
 
