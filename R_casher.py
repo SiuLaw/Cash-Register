@@ -34,7 +34,6 @@ class stockItem(Item):
     
     def storeNewStock(self): #For excel to read
         if( os.path.isfile("stock.csv") == False ):
-            print( "stock.csv does not exist" )
             file = open("stock.csv","a+")
             text = ""
             for i in range( stockItemAttributeLength ) :
