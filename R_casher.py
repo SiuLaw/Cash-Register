@@ -9,6 +9,18 @@ stockItemAttr = ["seller","fandom","maintype","bundle","price","details","stock"
 
 ############################################################################################################################
 #FUNCTION
+
+def listToCSVtxt( input_list ):
+    output_text = ""
+    length = len( input_list )
+    for i in range( length ):
+        output_text += input_list[i]
+        if i < length - 1:
+            output_text += ","
+        else:
+            output_text += "\n"
+    return output_text
+
 def storeInput(): #for input->list->object
     newStockAttr = []
     i = 0
@@ -17,15 +29,14 @@ def storeInput(): #for input->list->object
         i +=1
     if( os.path.isfile("stock.csv") == False ):
             file = open("stock.csv","a+")
-            text = ""
-            for i in range( stockItemAttrLength ) :
-                text += stockItemAttr[i].capitalize() 
-                if i < stockItemAttrLength - 1:
-                    text += ","
-            file.write(text)
+            text = listToCSVtxt( stockItemAttr )
+            file.write(text) 
             file.close
+            
     file = open("stock.csv","a+")
-    file.write(str(newStockAttr))
+    text = listToCSVtxt( newStockAttr )
+    file.write( text )
+    # file.write(str(newStockAttr))
     file.close  
 
 ############################################################################################################################
