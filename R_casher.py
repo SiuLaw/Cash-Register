@@ -5,6 +5,7 @@ from tkinter import *
 dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 
+stockItemAttribute = ["seller","fandom","maintype","bundle","price","details","stock"]
 
 ############################################################################################################################
 #MAIN CLASS
@@ -32,6 +33,17 @@ class stockItem(Item):
         self.stock = stock
     
     def storeNewStock(self): #For excel to read
+        if( os.path.isfile("stock.csv") == False ):
+            print( "stock.csv does not exist" )
+            file = open("stock.csv","a+")
+            text = ""
+            for i in range( stockItemAttributeLength ) :
+                text += stockItemAttribute[i].capitalize() 
+                if i < stockItemAttributeLength - 1:
+                    text += ","
+            file.write(text)
+            file.close
+        
         file = open("stock.csv","a+")
         text = "\n{},{},{},{},{},{},{}".format(self.seller,self.fandom,self.maintype,self.bundle,self.price,self.details,self.stock)
         file.write(text)
@@ -57,7 +69,7 @@ def readFile(x):
 
 #Deafult StockItem
 defaultStockItem = stockItem()
-stockItemAttribute = defaultStockItem.makeAttributeList()
+# stockItemAttribute = defaultStockItem.makeAttributeList()
 stockItemAttributeLength = defaultStockItem.lenAttribute()
 
 ############################################################################################################################
