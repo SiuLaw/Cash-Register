@@ -8,6 +8,27 @@ os.chdir(dir_path)
 stockItemAttr = ["seller","fandom","maintype","bundle","price","details","stock"]
 
 ############################################################################################################################
+#FUNCTION
+def storeInput(): #for input->list->object
+    newStockAttr = []
+    i = 0
+    while i < stockItemAttrLength:
+        newStockAttr.append(boxes[i].get() )
+        i +=1
+    if( os.path.isfile("stock.csv") == False ):
+            file = open("stock.csv","a+")
+            text = ""
+            for i in range( stockItemAttrLength ) :
+                text += stockItemAttr[i].capitalize() 
+                if i < stockItemAttrLength - 1:
+                    text += ","
+            file.write(text)
+            file.close
+    file = open("stock.csv","a+")
+    file.write(str(newStockAttr))
+    file.close  
+
+############################################################################################################################
 #MAIN CLASS
 class Item:
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-",stock = "0"):
@@ -31,22 +52,6 @@ class stockItem(Item):
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-",stock = "0"):
         super().__init__(seller,fandom,maintype,bundle,price,details)
         self.stock = stock
-    
-    def storeNewStock(self): #For excel to read
-        if( os.path.isfile("stock.csv") == False ):
-            file = open("stock.csv","a+")
-            text = ""
-            for i in range( stockItemAttrLength ) :
-                text += stockItemAttr[i].capitalize() 
-                if i < stockItemAttrLength - 1:
-                    text += ","
-            file.write(text)
-            file.close
-        
-        file = open("stock.csv","a+")
-        text = "\n{},{},{},{},{},{},{}".format(self.seller,self.fandom,self.maintype,self.bundle,self.price,self.details,self.stock)
-        file.write(text)
-        file.close
 
 class salesItem(Item):
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-", discount = False, alternativePrice = 0):
@@ -67,9 +72,7 @@ defaultStockItem = stockItem()
 stockItemAttrLength = defaultStockItem.lenAttr()
 
 ############################################################################################################################
-
-
-
+#OBJECT IMPUT
 
 
 
@@ -87,6 +90,8 @@ while i < stockItemAttrLength:
     Label(root,text=title).grid(row=3,column = i)
     i += 1
 
+#For displaying stock
+
 #For Entries
 i = 0
 boxes = []
@@ -97,15 +102,6 @@ while i < stockItemAttrLength:
     boxes.append(entry)
     i += 1
 
-#For Input new item as an object
-def storeInput():
-    newStockAttr = []
-    i = 0
-    while i < stockItemAttrLength:
-        newStockAttr.append(boxes[i].get() )
-        i +=1
-    newStock = stockItem(newStockAttr[0],newStockAttr[1],newStockAttr[2],newStockAttr[3],newStockAttr[4],newStockAttr[5],newStockAttr[6])
-    newStock.storeNewStock()
 
 Button(root,text = "Input", command=storeInput).grid(row=5)
 
