@@ -111,21 +111,21 @@ class Item:
             
     def initializeFromArgs(self,*args):
         # set the attr values with the 6 arguments
-        self.seller   = args[0]
-        self.fandom   = args[1]
-        self.maintype = args[2]
-        self.bundle   = args[3]
-        self.price    = args[4]
-        self.details  = args[5]
+        self.seller   = inputOrDefault( args[0],"Unknown seller" )
+        self.fandom   = inputOrDefault( args[1],"Unknown fandom" )
+        self.maintype = inputOrDefault( args[2],"Unknown type" )
+        self.bundle   = inputOrDefault( args[3],"Unknown bundle" )
+        self.price    = inputOrDefault( args[4],0 ) 
+        self.details  = inputOrDefault( args[5],"-" )
         
     def initializeFromList(self,argList):
         # set the attr values with the single "list" arguments
-        self.seller   = argList[0]
-        self.fandom   = argList[1]
-        self.maintype = argList[2]
-        self.bundle   = argList[3]
-        self.price    = argList[4]
-        self.details  = argList[5]
+        self.seller   = inputOrDefault( argList[0],"Unknown seller" )
+        self.fandom   = inputOrDefault( argList[1],"Unknown fandom" )
+        self.maintype = inputOrDefault( argList[2],"Unknown type" )
+        self.bundle   = inputOrDefault( argList[3],"Unknown bundle" )
+        self.price    = inputOrDefault( argList[4],0 ) 
+        self.details  = inputOrDefault( argList[5],"-" )
     
     def makeAttrList(self): 
         attrList = list(self.__dict__.keys()) 
@@ -143,10 +143,10 @@ class stockItem(Item):
         
         # Dealing with the extra input of "stock", unique to the stockItem class
         if( len(args) > 1 ):
-            self.stock = args[6]
+            self.stock = inputOrDefault( args[6], 0 )
         elif len(args) == 1:
             if isinstance( args[0], list):
-                self.stock = args[0][6]
+                self.stock = inputOrDefault( args[0][6], 0 ) 
 
 class salesItem(Item):
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-", discount = False, alternativePrice = 0):
