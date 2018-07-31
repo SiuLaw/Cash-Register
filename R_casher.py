@@ -56,6 +56,7 @@ def importObject( csvfile ,objectClass):
         if( col_title_passed == False ):
             col_title_passed = True
             continue
+
         newObject = objectClass(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         objectList.append( newObject )
     file.close
@@ -69,13 +70,27 @@ def printObjectList( objectList ):
 ############################################################################################################################
 #MAIN CLASS
 class Item:
-    def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-",stock = "0"):
-        self.seller = seller
-        self.fandom = fandom
-        self.maintype = maintype
-        self.bundle = bundle
-        self.price = price
-        self.details = details
+    
+    def __init__(self, *args):
+        # DEFAULT VALUES
+        self.seller   = "Unknown seller"
+        self.fandom   = "Unknown fandom"
+        self.maintype = "Unknown type"
+        self.bundle   = "Unknown bundle"
+        self.price    = 0
+        self.details  = "-"
+        
+        if len(args) > 1:
+            # When the args are input as individually ( i.e. 
+            self.initializeFromArgs(*args)
+            
+    def initializeFromArgs(self,*args):
+        self.seller   = args[0]
+        self.fandom   = args[1]
+        self.maintype = args[2]
+        self.bundle   = args[3]
+        self.price    = args[4]
+        self.details  = args[5]
     
     def makeAttrList(self): 
         attrList = list(self.__dict__.keys()) 
@@ -87,9 +102,12 @@ class Item:
 
 #SUB CLASS
 class stockItem(Item):
-    def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-",stock = "0"):
-        super().__init__(seller,fandom,maintype,bundle,price,details)
-        self.stock = stock
+    def __init__(self,*args):
+        self.stock = "0"
+        super().__init__(*args)
+        
+        if( len(args) == 7 ):
+            self.stock = args[6]
 
 class salesItem(Item):
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-", discount = False, alternativePrice = 0):
