@@ -60,7 +60,7 @@ def Input(csvfile,objectClass,ItemAttr): #for input->list->object
     file.close
     
 def storeInput():
-    def Input('stock.csv',stockItem,stockItemAttr)
+    Input('stock.csv',stockItem,stockItemAttr)
 
 def importObject( fileName,objectClass):
     file = open( fileName ,'r')
