@@ -20,25 +20,7 @@ def listToCSVtxt( input_list ):
             output_text += ","
         else:
             output_text += "\n"
-    return output_text
-
-# def storeInput(): #for input->list->object
-#     newStockAttr = []
-#     i = 0
-#     while i < stockItemAttrLength:
-#         newStockAttr.append(boxes[i].get() )
-#         i +=1
-#     if( os.path.isfile("stock.csv") == False ):
-#             file = open("stock.csv","a+")
-#             text = listToCSVtxt( stockItemAttr ) 
-#             file.write(text) 
-#             file.close
-#             
-#     file = open("stock.csv","a+")
-#     text = listToCSVtxt( newStockAttr )
-#     file.write( text )
-#     # file.write(str(newStockAttr))
-#     file.close  
+    return output_text 
 
 def Input(csvfile,objectClass,ItemAttr): #for input->list->object
     newAttr = []
@@ -62,9 +44,9 @@ def Input(csvfile,objectClass,ItemAttr): #for input->list->object
 def storeInput():
     Input('stock.csv',stockItem,stockItemAttr)
 
-def importObject( fileName,objectClass):
-    file = open( fileName ,'r')
-    spamreader = csv.reader( fileName ,delimiter = ",")
+def importObject( csvfile ,objectClass):
+    file = open( csvfile ,'r')
+    spamreader = csv.reader( csvfile ,delimiter = ",")
     table = []
     for line in spamreader:
         table.append(line)
@@ -112,7 +94,6 @@ def readFile(x):
 
 #Deafult StockItem
 defaultStockItem = stockItem()
-# stockItemAttr = defaultStockItem.makeAttrList()
 stockItemAttrLength = defaultStockItem.lenAttr()
 
 ############################################################################################################################
@@ -145,8 +126,6 @@ while i < stockItemAttrLength:
     i += 1
 
 Button(root,text = "Input", command=storeInput).grid(row=5)
-#Button(root,text = "Input", command=Input).grid(row=5)
-#Salesinput button
 
 mainloop()
 ############################################################################################################################
