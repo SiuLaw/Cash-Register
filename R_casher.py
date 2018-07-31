@@ -45,19 +45,28 @@ def storeInput():
     Input('stock.csv',stockItem,stockItemAttr)
 
 def importObject( csvfile ,objectClass):
+    # initialize the objectList for output
+    objectList = []
+    
+    # Stop the import if the csvfile does not exist
+    if ( os.path.isfile( csvfile ) == False ):
+        print( "There are no existing csv file named: " + csvfile )
+        return objectList
+    
     file = open( csvfile ,'r')
     spamreader = csv.reader( file ,delimiter = ",")
     table = []
     for line in spamreader:
         table.append(line)
-    objectList = []
+    
     col_title_passed = False
     for line in table:
         if( col_title_passed == False ):
             col_title_passed = True
             continue
 
-        newObject = objectClass(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
+        # newObject = objectClass(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
+        newObject = objectClass( line )
         objectList.append( newObject )
     file.close
     
@@ -81,16 +90,35 @@ class Item:
         self.details  = "-"
         
         if len(args) > 1:
-            # When the args are input as individually ( i.e. 
+            # When the args are input as individually ( i.e. Item( seller, fandom, maintype, bundle, price, details ) )
             self.initializeFromArgs(*args)
+        elif len(args) == 1:
+            # When there is only one input, then check that it is a list
+            if( isinstance( args[0], list) ):
+                self.initializeFromList(args[0])
+            else:
+                print("Only one input and not list")
+        else:
+            pass
+            # print("Empty object created")
             
     def initializeFromArgs(self,*args):
+        # set the attr values with the 6 arguments
         self.seller   = args[0]
         self.fandom   = args[1]
         self.maintype = args[2]
         self.bundle   = args[3]
         self.price    = args[4]
         self.details  = args[5]
+        
+    def initializeFromList(self,argList):
+        # set the attr values with the single "list" arguments
+        self.seller   = argList[0]
+        self.fandom   = argList[1]
+        self.maintype = argList[2]
+        self.bundle   = argList[3]
+        self.price    = argList[4]
+        self.details  = argList[5]
     
     def makeAttrList(self): 
         attrList = list(self.__dict__.keys()) 
@@ -106,8 +134,12 @@ class stockItem(Item):
         self.stock = "0"
         super().__init__(*args)
         
-        if( len(args) == 7 ):
+        # Dealing with the extra input of "stock", unique to the stockItem class
+        if( len(args) > 1 ):
             self.stock = args[6]
+        elif len(args) == 1:
+            if isinstance( args[0], list):
+                self.stock = args[0][6]
 
 class salesItem(Item):
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-", discount = False, alternativePrice = 0):
