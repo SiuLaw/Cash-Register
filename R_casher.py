@@ -60,7 +60,8 @@ def importObject( csvfile ,objectClass):
         table.append(line)
     
     col_title_passed = False
-    for line in table:
+    for i in range( len(table) ):
+        line = table[i]
         if( col_title_passed == False ):
             col_title_passed = True
             continue
@@ -75,6 +76,12 @@ def importObject( csvfile ,objectClass):
 def printObjectList( objectList ):
     for obj in objectList:
         print( obj.__dict__ )
+
+def inputOrDefault( inp_val, def_val ):
+    if inp_val == "":
+        return def_val
+    else:
+        return inp_val
 
 ############################################################################################################################
 #MAIN CLASS
