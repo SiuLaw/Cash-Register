@@ -46,13 +46,25 @@ def storeInput():
 
 def importObject( csvfile ,objectClass):
     file = open( csvfile ,'r')
-    spamreader = csv.reader( csvfile ,delimiter = ",")
+    spamreader = csv.reader( file ,delimiter = ",")
     table = []
     for line in spamreader:
         table.append(line)
+    objectList = []
+    col_title_passed = False
     for line in table:
-        newObject = objectClass(table[0],table[1],table[2],table[3],table[4],table[5],table[6])
+        if( col_title_passed == False ):
+            col_title_passed = True
+            continue
+        newObject = objectClass(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
+        objectList.append( newObject )
     file.close
+    
+    return objectList
+
+def printObjectList( objectList ):
+    for obj in objectList:
+        print( obj.__dict__ )
 
 ############################################################################################################################
 #MAIN CLASS
@@ -98,7 +110,8 @@ stockItemAttrLength = defaultStockItem.lenAttr()
 
 ############################################################################################################################
 #OBJECT INPUT
-importObject('stock.csv',stockItem)
+objectList = importObject('stock.csv',stockItem)
+printObjectList( objectList )
 
 ############################################################################################################################
 #TKinter
