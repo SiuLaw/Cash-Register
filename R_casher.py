@@ -181,6 +181,9 @@ stockItemAttrLength = defaultStockItem.lenAttr()
 objectList = importObject('stock.csv',stockItem)
 printObjectList( objectList )
 
+
+allObject = gc.get_objects()
+
 ############################################################################################################################
 #TKinter
 root = Tk()
@@ -195,7 +198,23 @@ while i < stockItemAttrLength:
     i += 1
 
 #For displaying stock
-stockList = Listbox(root).grid(row = 2 )
+list1 = Listbox(root)
+list1.grid(row = 2)
+
+stockList = []
+for things in allObject:
+    if isinstance(things,stockItem):
+        stockList.append(things)
+print(stockList)
+
+list1.insert(END, stockList)
+i = 0
+while i < len(stockList):
+    for things in stockList:
+        list1.insert(END,stockList[i].seller)
+    i += 1
+# for things in stockList:
+#     list1.insert(END, stockList)
 
 #For Entries
 i = 0
