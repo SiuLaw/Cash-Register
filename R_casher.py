@@ -35,7 +35,7 @@ def Input(csvfile,objectClass,ItemAttr):
     while i < objectAttrLength:
         newAttr.append(boxes[i].get() )
         i +=1
-        
+    
     #turning storing list via listToCSVtxt
     if( os.path.isfile(csvfile) == False ):
             file = open(csvfile,"a+")
@@ -51,6 +51,7 @@ def Input(csvfile,objectClass,ItemAttr):
 # Storing stock
 def stockInput():
     Input('stock.csv',stockItem,stockItemAttr)
+
 
 #MISSING storing sales
 
@@ -94,6 +95,15 @@ def inputOrDefault( inp_val, def_val ):
         return def_val
     else:
         return inp_val
+
+
+def objectintoList (x,objectClass):
+    olist = []
+    for things in x:
+        if isinstance(things,objectClass):
+            olist.append(things)
+    return olist
+
 
 ############################################################################################################################
 #MAIN CLASS
@@ -143,7 +153,7 @@ class Item:
     def lenAttr(self):
         attrLength = len(list(self.__dict__.keys()))
         return attrLength
-
+    
 #SUB CLASS
 class stockItem(Item):
     
@@ -156,7 +166,21 @@ class stockItem(Item):
             self.stock = inputOrDefault( args[6], 0 )
         elif len(args) == 1:
             if isinstance( args[0], list):
-                self.stock = inputOrDefault( args[0][6], 0 ) 
+                self.stock = inputOrDefault( args[0][6], 0 )
+    
+    def switcher(self,number):
+        switcher = {
+            0: self.seller,
+            1: self.fandom,
+            2: self.maintype,
+            3: self.bundle,
+            4: self.price,
+            5: self.details,
+            6: self.stock
+        }
+        return switcher.get(number, 0)
+        
+
 
 class salesItem(Item):
     
@@ -178,16 +202,16 @@ stockItemAttrLength = defaultStockItem.lenAttr()
 
 ############################################################################################################################
 #OBJECT INPUT
+#Object into list
 objectList = importObject('stock.csv',stockItem)
-printObjectList( objectList )
-
-
 allObject = gc.get_objects()
+stockList = objectintoList (allObject,stockItem)
 
 ############################################################################################################################
 #TKinter
 root = Tk()
 Label(root, text='Stock list').grid(row = 0,column =3)
+Button(root,text = "Input", command=stockInput).grid(row=5)
 
 #For Labels
 i = 0
@@ -198,23 +222,20 @@ while i < stockItemAttrLength:
     i += 1
 
 #For displaying stock
-list1 = Listbox(root)
-list1.grid(row = 2)
-
-stockList = []
-for things in allObject:
-    if isinstance(things,stockItem):
-        stockList.append(things)
-print(stockList)
-
-list1.insert(END, stockList)
 i = 0
-while i < len(stockList):
-    for things in stockList:
-        list1.insert(END,stockList[i].seller)
+lists = []
+while i < stockItemAttrLength:
+    list_stock = Listbox(root)
+    list_stock.grid(row = 2,column = i)
+    lists.append(list_stock)
+    q = 0
+    while q < len(stockList):
+        for things in stockList:
+            attribute = stockList[q]
+            list_stock.insert(END, attribute.switcher(i))
+            #list_stock.insert(END,stockList[q])# specific attribute
+            q += 1
     i += 1
-# for things in stockList:
-#     list1.insert(END, stockList)
 
 #For Entries
 i = 0
@@ -225,10 +246,6 @@ while i < stockItemAttrLength:
     istr = str(i)
     boxes.append(entry)
     i += 1
-
-Button(root,text = "Input", command=stockInput).grid(row=5)
-
-my_gui = stockItem(root)
 
 mainloop()
 ############################################################################################################################
