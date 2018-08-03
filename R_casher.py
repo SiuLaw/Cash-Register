@@ -180,8 +180,6 @@ class stockItem(Item):
         }
         return switcher.get(number, 0)
         
-
-
 class salesItem(Item):
     
     def __init__(self,seller = "Unknown seller", fandom="Unknown fandom",maintype = "Unknown type",bundle = "Unknown bundle",price = 0,details = "-", discount = False, alternativePrice = 0):
@@ -210,30 +208,33 @@ stockList = objectintoList (allObject,stockItem)
 ############################################################################################################################
 #TKinter
 root = Tk()
-Label(root, text='Stock list').grid(row = 0,column =3)
-Button(root,text = "Input", command=stockInput).grid(row=5)
+Label(root, text='Stock list').grid(row = 0,column = 3)
+Button(root,text = "Input", command=stockInput).grid(row = 5)
 
 #For Labels
 i = 0
 while i < stockItemAttrLength:
     title = str(stockItemAttr[i]).capitalize() 
-    Label(root,text=title).grid(row=1,column = i)
-    Label(root,text=title).grid(row=3,column = i)
+    Label(root,text = title).grid(row = 1,column = i)
+    Label(root,text = title).grid(row = 3,column = i)
     i += 1
 
 #For displaying stock
 i = 0
 lists = []
-while i < stockItemAttrLength:
-    list_stock = Listbox(root)
-    list_stock.grid(row = 2,column = i)
-    lists.append(list_stock)
+
+#while loop to create enough boxes for all stockItemAttr
+while i < stockItemAttrLength: 
+    list_stock = Listbox(root) #create list box
+    list_stock.grid(row = 2,column = i) #position of list box
+    lists.append(list_stock) #make a list of list box #just for furture usage
     q = 0
-    while q < len(stockList):
+
+    #inserting attribute of each imputed objects into listbox
+    while q < len(stockList): #
         for things in stockList:
             attribute = stockList[q]
             list_stock.insert(END, attribute.switcher(i))
-            #list_stock.insert(END,stockList[q])# specific attribute
             q += 1
     i += 1
 
@@ -242,7 +243,7 @@ i = 0
 boxes = []
 while i < stockItemAttrLength:
     entry = Entry(root)
-    entry.grid(row=4, column=i)
+    entry.grid(row = 4, column = i)
     istr = str(i)
     boxes.append(entry)
     i += 1
