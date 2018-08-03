@@ -104,6 +104,37 @@ def objectintoList (x,objectClass):
             olist.append(things)
     return olist
 
+def display_label(root):
+    #For Labels
+    i = 0
+    while i < stockItemAttrLength:
+        title = str(stockItemAttr[i]).capitalize() 
+        Label(root,text = title).grid(row = 1,column = i)
+        Label(root,text = title).grid(row = 3,column = i)
+        i += 1
+    print( "label display updated" )
+
+def display_stock(root,stockList):
+    #For displaying stock
+    i = 0
+    lists = []
+    n = stockItemAttrLength
+    
+    #while loop to create enough boxes for all stockItemAttr
+    while i < n: 
+        list_stock = Listbox(root) #create list box
+        list_stock.grid(row = 2,column = i) #position of list box
+        lists.append(list_stock) #make a list of list box #just for furture usage
+        q = 0
+    
+        #inserting attribute of each imputed objects into listbox
+        while q < len(stockList): #
+            for things in stockList:
+                attribute = stockList[q]
+                list_stock.insert(END, attribute.switcher(i))
+                q += 1
+        i += 1
+    print( "stock display updated" )
 
 ############################################################################################################################
 #MAIN CLASS
@@ -211,32 +242,12 @@ root = Tk()
 Label(root, text='Stock list').grid(row = 0,column = 3)
 Button(root,text = "Input", command=stockInput).grid(row = 5)
 
+
 #For Labels
-i = 0
-while i < stockItemAttrLength:
-    title = str(stockItemAttr[i]).capitalize() 
-    Label(root,text = title).grid(row = 1,column = i)
-    Label(root,text = title).grid(row = 3,column = i)
-    i += 1
-
+display_label(root)
+        
 #For displaying stock
-i = 0
-lists = []
-
-#while loop to create enough boxes for all stockItemAttr
-while i < stockItemAttrLength: 
-    list_stock = Listbox(root) #create list box
-    list_stock.grid(row = 2,column = i) #position of list box
-    lists.append(list_stock) #make a list of list box #just for furture usage
-    q = 0
-
-    #inserting attribute of each imputed objects into listbox
-    while q < len(stockList): #
-        for things in stockList:
-            attribute = stockList[q]
-            list_stock.insert(END, attribute.switcher(i))
-            q += 1
-    i += 1
+display_stock(root,stockList)
 
 #For Entries
 i = 0
