@@ -51,6 +51,10 @@ def Input(csvfile,objectClass,ItemAttr):
 # Storing stock
 def stockInput():
     Input('stock.csv',stockItem,stockItemAttr)
+    stockList = importObject('stock.csv',stockItem)
+    display_stock(root,stockList)
+    
+    
 
 
 #MISSING storing sales
