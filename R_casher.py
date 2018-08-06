@@ -53,11 +53,6 @@ def stockInput():
     Input('stock.csv',stockItem,stockItemAttr)
     stockList = importObject('stock.csv',stockItem)
     display_stock(root,stockList)
-    
-    
-
-
-#MISSING storing sales
 
 # Read csvfile -> import as objects
 def importObject( csvfile ,objectClass):
@@ -100,7 +95,7 @@ def inputOrDefault( inp_val, def_val ):
     else:
         return inp_val
 
-
+# Making a list consisted of objects
 def objectintoList (x,objectClass):
     olist = []
     for things in x:
@@ -108,6 +103,8 @@ def objectintoList (x,objectClass):
             olist.append(things)
     return olist
 
+############################################################################################################################
+#GUI FUNCTION
 def display_label(root):
     #For Labels
     i = 0
@@ -126,9 +123,9 @@ def display_stock(root,stockList):
     
     #while loop to create enough boxes for all stockItemAttr
     while i < n: 
-        list_stock = Listbox(root) #create list box
-        list_stock.grid(row = 2,column = i) #position of list box
-        lists.append(list_stock) #make a list of list box #just for furture usage
+        list_stock = Listbox(root) 
+        list_stock.grid(row = 2,column = i) 
+        lists.append(list_stock)
         q = 0
     
         #inserting attribute of each imputed objects into listbox
@@ -203,6 +200,7 @@ class stockItem(Item):
             if isinstance( args[0], list):
                 self.stock = inputOrDefault( args[0][6], 0 )
     
+    #calling attributes with number
     def switcher(self,number):
         switcher = {
             0: self.seller,
@@ -214,6 +212,9 @@ class stockItem(Item):
             6: self.stock
         }
         return switcher.get(number, 0)
+    
+    def sales(self):
+        self.stock = int(self.stock) - 1
         
 class salesItem(Item):
     
