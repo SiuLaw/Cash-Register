@@ -3,6 +3,7 @@
 import os
 import csv
 import gc
+import operator
 from tkinter import *
 dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
@@ -76,8 +77,6 @@ def importObject( csvfile ,objectClass):
         if( col_title_passed == False ):
             col_title_passed = True
             continue
-
-        # newObject = objectClass(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         newObject = objectClass( line )
         objectList.append( newObject )
     file.close
@@ -101,7 +100,14 @@ def objectintoList (x,objectClass):
     for things in x:
         if isinstance(things,objectClass):
             olist.append(things)
+    olist = sortList(olist)
     return olist
+
+def sortList(objectList):
+    objectList_sorted = sorted(objectList,key = operator.attrgetter('maintype'))
+    objectList_sorted = sorted(objectList,key = operator.attrgetter('fandom'))
+    objectList_sorted = sorted(objectList,key = operator.attrgetter('seller'))
+    return objectList_sorted
 
 ############################################################################################################################
 #GUI FUNCTION
