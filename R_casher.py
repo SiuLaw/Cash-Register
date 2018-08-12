@@ -158,7 +158,7 @@ class MLB(object):
         
         # popup
         self.popup_menu.add_command( label = "Delete", command = self.deleteStock )
-        self.popup_menu.add_command( label = "Stock", command = self.changeStock )
+        self.popup_menu.add_command( label = "where got", command = self.heregot)
         self.tree.bind( "<Button-2>", self.popup ) 
     
     # Constructing Tree
@@ -194,16 +194,11 @@ class MLB(object):
         self.popup_menu.post(event.x_root, event.y_root)
     
     def deleteStock(self):
-        # for all items selected in tree
         for i in self.tree.selection():
             self.tree.delete(i)
     
-    def changeStock(self):
-        newWin = Toplevel()
-        newWin.wm_title("Change Stock")
-        Label(newWin, text = "Enter new stock number: \n").pack()
-        stockEntry = Entry(newWin).pack()
-        Button(newWin,text = "Input").pack()
+    def heregot(self):
+        print("here got!")
     
     # Vertical scrollbar  
     def scroll(self):
@@ -317,9 +312,6 @@ class stockItem( Item ):
         }
         return switcher.get( number, 0 )
     
-    def changestock (self, newStock ):
-        pass
-        
     def sales( self ):
         self.stock = int( self.stock ) - 1
         
