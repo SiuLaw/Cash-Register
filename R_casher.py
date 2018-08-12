@@ -5,6 +5,11 @@ import csv
 import gc
 import operator
 from tkinter import *
+import TkTreectrl as treectrl
+import tkinter.font as tkFont
+import tkinter.ttk as ttk
+import sqlite3
+
 dir_path = os.path.dirname(__file__)
 os.chdir(dir_path)
 
@@ -12,6 +17,59 @@ stockItemAttr = ["seller","fandom","maintype","bundle","price","details","stock"
 
 ############################################################################################################################
 #FUNCTION
+
+# Converting empty input into default value
+def inputOrDefault( inp_val, def_val ):
+    if inp_val == "":
+        return def_val
+    else:
+        return inp_val
+
+# Read csvfile -> list -> objects
+def importObject(csvfile , objectClass):
+    # initialize the objectList for output
+    objectList = [ ]
+    
+    # Stop the import if the csvfile does not exist
+    if ( os.path.isfile( csvfile ) == False ):
+        print( "There are no existing csv file named: " + csvfile )
+        return objectList
+    
+    # Open csvfile, read and store everything into [table]
+    file = open( csvfile ,'r')
+    spamreader = csv.reader( file , delimiter = ",")
+    table = []
+    for line in spamreader:
+        table.append(line)
+    
+    # Create a list of objects
+    col_title_passed = False
+    for i in range( len(table) ):
+        line = table[i]
+        if( col_title_passed == False ):
+            col_title_passed = True
+            continue
+        newObject = objectClass( line )
+        objectList.append( newObject )
+        
+    file.close
+    
+    return objectList
+
+# Create list of objects
+def objectintoList (x,objectClass):
+    olist = []
+    for things in x:
+        if isinstance(things,objectClass):
+            olist.append(things)
+    olist = sortList(olist)
+    return olist
+
+# input stock + renew stockList
+def stockInput():
+    Input('stock.csv',stockItem,stockItemAttr)
+    stockList = importObject('stock.csv',stockItem)
+    MLB(root,stockList)
 
 # Part of input
 def listToCSVtxt( input_list ):
@@ -49,99 +107,118 @@ def Input(csvfile,objectClass,ItemAttr):
     file.write( text )
     file.close
 
-# Storing stock
-def stockInput():
-    Input('stock.csv',stockItem,stockItemAttr)
-    stockList = importObject('stock.csv',stockItem)
-    display_stock(root,stockList)
-
-# Read csvfile -> import as objects
-def importObject( csvfile ,objectClass):
-    # initialize the objectList for output
-    objectList = []
-    
-    # Stop the import if the csvfile does not exist
-    if ( os.path.isfile( csvfile ) == False ):
-        print( "There are no existing csv file named: " + csvfile )
-        return objectList
-    
-    file = open( csvfile ,'r')
-    spamreader = csv.reader( file ,delimiter = ",")
-    table = []
-    for line in spamreader:
-        table.append(line)
-    
-    col_title_passed = False
-    for i in range( len(table) ):
-        line = table[i]
-        if( col_title_passed == False ):
-            col_title_passed = True
-            continue
-        newObject = objectClass( line )
-        objectList.append( newObject )
-    file.close
-    
-    return objectList
-
-def printObjectList( objectList ):
-    for obj in objectList:
-        print( obj.__dict__ )
-
-# Converting empty input into default value
-def inputOrDefault( inp_val, def_val ):
-    if inp_val == "":
-        return def_val
-    else:
-        return inp_val
-
-# Making a list consisted of objects
-def objectintoList (x,objectClass):
-    olist = []
-    for things in x:
-        if isinstance(things,objectClass):
-            olist.append(things)
-    olist = sortList(olist)
-    return olist
-
 def sortList(objectList):
     objectList_sorted = sorted(objectList,key = operator.attrgetter('maintype'))
     objectList_sorted = sorted(objectList,key = operator.attrgetter('fandom'))
     objectList_sorted = sorted(objectList,key = operator.attrgetter('seller'))
     return objectList_sorted
 
+# Sort content when header is clicked on in MLB
+def sortby(tree,col,descending):
+    # Making a list of [column,content]
+    data = [(tree.set(child, col), child) \
+        for child in tree.get_children('')]
+    data.sort(reverse=descending)
+    
+    for ix, item in enumerate(data):
+        tree.move(item[1], '', ix)
+        
+    tree.heading(col, command=lambda col=col: sortby(tree, col, \
+        int(not descending)))
+
+def printObjectList( objectList ):
+    for obj in objectList:
+        print( obj.__dict__ )
+
 ############################################################################################################################
 #GUI FUNCTION
-def display_label(root):
-    #For Labels
+
+# def display_stock(root,stockList):
+#     #For displaying stock
+#     i = 0
+#     lists = []
+#     n = stockItemAttrLength
+#     
+#     #while loop to create enough boxes for all stockItemAttr
+#     while i < n: 
+#         list_stock = Listbox(root) 
+#         list_stock.grid(row = 2,column = i) 
+#         lists.append(list_stock)
+#         q = 0
+#     
+#         #inserting attribute of each imputed objects into listbox
+#         while q < len(stockList): #
+#             for things in stockList:
+#                 attribute = stockList[q]
+#                 list_stock.insert(END, attribute.switcher(i))
+#                 q += 1
+#         i += 1
+#     print( "stock display updated" )
+
+#Multi List Box
+def MLB(root,stockList):
+    # Container created in loop because for updating stocklist
+    
+    # Constructing Tree
+    i = 0
+    title = []
+    while i < stockItemAttrLength:
+        title.append( str(stockItemAttr[i]).capitalize()) 
+        i += 1
+    tree = ttk.Treeview(column = title, show = "headings")
+    
+    # Vertical scrollbar
+    vsb = ttk.Scrollbar(orient="vertical", command = tree.yview)
+    tree.configure(yscrollcommand=vsb.set)
+    tree.grid(row = 0, sticky='nsew', in_ = container)
+    vsb.grid(row = 0, column = 1, sticky='ns',in_ = container)
+
+    container.grid_columnconfigure(0, weight=1)
+    container.grid_rowconfigure(0, weight=1)
+    
+    # Filling in listbox
+    i = 0
+    while i < len(stockList): 
+        q = 0
+        while q < stockItemAttrLength: #
+            stuff = []
+            for things in stockList:
+                stuff.append(stockList[i].switcher(q))
+                q += 1
+            tree.insert('','end', values = stuff)
+        i += 1
+    print( "stock display updated" )
+    
+    for col in title:
+        tree.heading(col, text=col.title(),
+            command=lambda c=col: sortby(tree, c, 0))
+        tree.column(col,
+            width=tkFont.Font().measure(col.title()))
+
+def entries(root):
+    container = Frame (bg = "white")
+    container.pack(fill = "both",expand = True)
+    
+    #Creating labels
     i = 0
     while i < stockItemAttrLength:
         title = str(stockItemAttr[i]).capitalize() 
-        Label(root,text = title).grid(row = 1,column = i)
-        Label(root,text = title).grid(row = 3,column = i)
+        Label(root,text = title).grid(row = 0,column = i,in_ = container)
+        Label(root,text = title).grid(row = 0,column = i,in_ = container)
         i += 1
-    print( "label display updated" )
-
-def display_stock(root,stockList):
-    #For displaying stock
+    
+    #Creating entries boxes
     i = 0
-    lists = []
-    n = stockItemAttrLength
-    
-    #while loop to create enough boxes for all stockItemAttr
-    while i < n: 
-        list_stock = Listbox(root) 
-        list_stock.grid(row = 2,column = i) 
-        lists.append(list_stock)
-        q = 0
-    
-        #inserting attribute of each imputed objects into listbox
-        while q < len(stockList): #
-            for things in stockList:
-                attribute = stockList[q]
-                list_stock.insert(END, attribute.switcher(i))
-                q += 1
+    boxes = []
+    while i < stockItemAttrLength:
+        entry = Entry(root)
+        entry.grid(row = 1, column = i,in_ = container)
+        istr = str(i)
+        boxes.append(entry)
         i += 1
-    print( "stock display updated" )
+    return boxes
+
+    print( "label display updated" )
 
 ############################################################################################################################
 #MAIN CLASS
@@ -239,6 +316,7 @@ def readFile(x):
 #Deafult StockItem
 defaultStockItem = stockItem()
 stockItemAttrLength = defaultStockItem.lenAttr()
+del defaultStockItem
 
 ############################################################################################################################
 #OBJECT INPUT
@@ -246,29 +324,23 @@ stockItemAttrLength = defaultStockItem.lenAttr()
 objectList = importObject('stock.csv',stockItem)
 allObject = gc.get_objects()
 stockList = objectintoList (allObject,stockItem)
-
 ############################################################################################################################
 #TKinter
 root = Tk()
-Label(root, text='Stock list').grid(row = 0,column = 3)
-Button(root,text = "Input", command=stockInput).grid(row = 5)
 
+Label(root, text='Stock list').pack()
 
-#For Labels
-display_label(root)
-        
-#For displaying stock
-display_stock(root,stockList)
+container = ttk.Frame()
+container.pack(fill = "both",expand = True)
+MLB(root,stockList)
 
-#For Entries
-i = 0
-boxes = []
-while i < stockItemAttrLength:
-    entry = Entry(root)
-    entry.grid(row = 4, column = i)
-    istr = str(i)
-    boxes.append(entry)
-    i += 1
+LINE = Frame(root,height=2,width=5000,bg="black")
+LINE.pack()
+
+Label(root, text='New Entries').pack(side = "left")
+
+boxes = entries(root)
+Button(root,text = "Input", command=stockInput).pack()
 
 mainloop()
 ############################################################################################################################
