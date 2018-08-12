@@ -20,7 +20,7 @@ stockItemAttr = [ "seller", "fandom", "maintype","bundle","price","details","sto
 
 #lambda
     # one time code
-    # BLUEPRINT = lambda argument: manipulation(argument)
+    # BLUEPRINT >>> lambda argument: manipulation( argument )
     
 ############################################################################################################################
 #FUNCTIONS
@@ -120,20 +120,6 @@ def sortList( objectList ):
     objectList_sorted = sorted( objectList, key = operator.attrgetter( 'seller' ))
     return objectList_sorted
 
-# Sort content when header is clicked on in MLB
-def sortby( tree, col, descending ):
-    # Making a list of [column,content]
-        # tree.set = returns value of the specific column
-        # tree.get_children = returns list of children belonging to items
-    data = [( tree.set( child, col ), child ) for child in tree.get_children('')]
-    
-    data.sort( reverse = descending )
-    for ix, item in enumerate( data ):
-        tree.move( item[ 1 ], '', ix ) # tree.move(item,parent,index), move #item# to position #index# in #parent's# list of children
-    
-    # tree.heading(column, command = reversed sortby)
-    tree.heading( col, command = lambda col = col: sortby( tree, col, int( not descending ) ) )
-
 def printObjectList( objectList ):
     for obj in objectList:
         print( obj.__dict__ )
@@ -141,47 +127,91 @@ def printObjectList( objectList ):
 ############################################################################################################################
 #GUI FUNCTION
 
-#Multi List Box
-def MLB( root, stockList ):
+# MLB function - Sort content when header is clicked on in MLB
+def sortby( tree, col, descending ):
+    # Making a list of [column,content]
+        # tree.set = returns value of the specific column
+        # tree.get_children = returns list of children belonging to items
+    data = [( tree.set( child, col ), child ) for child in tree.get_children('')]
+    
+    # Sorting list
+    data.sort( reverse = descending )
+    for ix, item in enumerate( data ):
+        tree.move( item[ 1 ], '', ix ) # tree.move(item,parent,index), move #item# to position #index# in #parent's# list of children
+    
+    # tree.heading(column, command = reversed sortby)
+    tree.heading( col, command = lambda col = col: sortby( tree, col, int( not descending ) ) )
+
+class MLB(object):
     # Container created in loop because for updating stocklist
     
+    def __init__(self):
+        self.tree = None
+        self.titles = [ ]
+        self.popup_menu = Menu(container, tearoff = 0 )
+        
+        # functions
+        self.makeList()
+        self.fillList()
+        self.title()
+        self.scroll()
+        
+        # popup
+        self.popup_menu.add_command( label = "Delete", command = self.deleteStock )
+        self.popup_menu.add_command( label = "where got", command = self.heregot)
+        self.tree.bind( "<Button-2>", self.popup ) 
+    
     # Constructing Tree
-    i = 0
-    title = [ ]
-    while i < stockItemAttrLength:
-        title.append( str( stockItemAttr[ i ] ).capitalize( ) ) 
-        i += 1
-    tree = ttk.Treeview( column = title, show = "headings" )
+    def makeList(self):
+        i = 0
+        while i < stockItemAttrLength:
+            self.titles.append( str( stockItemAttr[ i ] ).capitalize( ) ) 
+            i += 1
+        self.tree = ttk.Treeview( column = self.titles, show = "headings" )
+        
+    # Filling Tree
+    def fillList(self):
+        i = 0
+        while i < len( stockList ): 
+            q = 0
+            while q < stockItemAttrLength: #
+                stuff = [ ]
+                for things in stockList:
+                    stuff.append( stockList[ i ].switcher( q ) )
+                    q += 1
+                self.tree.insert( '', 'end', values = stuff )
+            i += 1
+        print( "stock display updated" )
     
-    # Vertical scrollbar
-    vsb = ttk.Scrollbar( orient="vertical", command = tree.yview )
-    tree.configure( yscrollcommand = vsb.set )
-    tree.grid( row = 0, column = 0, sticky ='nsew', in_ = container)
-    vsb.grid ( row = 0, column = 1, sticky='ns'   , in_ = container)
-
-    container.grid_columnconfigure( 0, weight = 1 )
-    container.grid_rowconfigure   ( 0, weight = 1 )
-    
-    # Filling in listbox
-    i = 0
-    while i < len( stockList ): 
-        q = 0
-        while q < stockItemAttrLength: #
-            stuff = [ ]
-            for things in stockList:
-                stuff.append( stockList[ i ].switcher( q ) )
-                q += 1
-            tree.insert( '', 'end', values = stuff )
-        i += 1
-    print( "stock display updated" )
-    
-    # Title
+    #Making title
         # col.title = assign headings
         # command = sortby(tree,column, descending = 0)
-    for col in title:
-        tree.heading( col, text = col.title( ), command = lambda c = col: sortby( tree, c, 0 ) )
-
-def entries(root):
+    def title(self):
+        for col in self.titles:
+            self.tree.heading( col, text = col.title(), command = lambda c = col: sortby( self.tree, c, 0 ) )
+    
+    def popup(self, event):
+        self.popup_menu.post(event.x_root, event.y_root)
+    
+    def deleteStock(self):
+        for i in self.tree.selection():
+            self.tree.delete(i)
+    
+    def heregot(self):
+        print("here got!")
+    
+    # Vertical scrollbar  
+    def scroll(self):
+        vsb = ttk.Scrollbar( orient="vertical", command = self.tree.yview )
+        self.tree.configure( yscrollcommand = vsb.set )
+        
+        self.tree.grid( row = 0, column = 0, sticky = 'nsew', in_ = container )
+        vsb.grid      ( row = 0, column = 1, sticky = 'ns'  , in_ = container )
+    
+        container.grid_columnconfigure( 0, weight = 1 )
+        container.grid_rowconfigure   ( 0, weight = 1 )
+        
+def entries( root ):
     container = Frame ( bg = "white" )
     container.pack( fill = "both", expand = True )
     
@@ -205,7 +235,7 @@ def entries(root):
     return boxes
 
     print( "label display updated" )
-
+    
 ############################################################################################################################
 #MAIN CLASS
 class Item:
@@ -331,7 +361,7 @@ Label( root, text = 'Stock list' ).pack( )
 
 container = ttk.Frame( )
 container.pack( fill = "both", expand = True )
-MLB( root, stockList )
+MLB = MLB( )
 
 LINE = Frame( root, height = 2, width = 5000, bg = "black" )
 LINE.pack( )
