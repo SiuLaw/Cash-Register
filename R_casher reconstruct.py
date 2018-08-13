@@ -35,6 +35,15 @@ def importObject( csvfile, objectClass ):
     # initialize the objectList for output
     objectList = [ ]
     
+    # Check that csv exists
+    if os.path.exists( csvfile ):
+        print( csvfile + " exist." )
+    else:
+        print( csvfile + " does not exist." )
+        file = open( csvfile , 'w')
+        file.close()
+        return objectList # if the csv did not exist before, return a empty objectList
+    
     # Open csvfile, read and store everything into [table]
     file = open( csvfile, 'r')
     spamreader = csv.reader( file, delimiter = ",")
@@ -67,7 +76,6 @@ def EntriesInput ( ):
 
 # Input list -> stored into csv file
 def Input( csvfile, objectClass, ItemAttr, newList ): 
-    i = 0
     newObject = objectClass( )
     objectAttrLength = newObject.lenAttr( )
     del newObject
@@ -119,11 +127,9 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
 def stockInput( ):
     global stockList
     newList = EntriesInput( )
-    print( newList )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
     stockList = importObject( 'stock.csv', stockItem )
-    print(stockList)
-    stockList = renewCSV ( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
+    # stockList = renewCSV ( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
     print ( "Stock updated." )
     
 ############################################################################################################################
