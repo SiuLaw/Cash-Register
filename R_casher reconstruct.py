@@ -37,7 +37,8 @@ def importObject( csvfile, objectClass ):
     
     # Check that csv exists
     if os.path.exists( csvfile ):
-        print( csvfile + " exist." )
+        # print( csvfile + " exist." )
+        pass
     else:
         print( csvfile + " does not exist." )
         file = open( csvfile , 'w')
@@ -98,16 +99,13 @@ def listToCSVtxt( input_list ):
     return output_text
 
 def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
-    if os.path.exists ( csvfile ):
+    if os.path.exists( csvfile ):
+        # print( csvfile + " exist." )
+        pass
+    else:
+        print( csvfile + " does not exist." )
         file = open( csvfile , 'w')
         file.close()
-        print( csvfile + " is erased." )
-    else:
-        print( csvfile + " did not exist." )
-    
-    print( "now attemping to renew CSV file" )
-    
-    print( ObjectList )
     
     while 0 != len( ObjectList ):
         newList = [ ]
