@@ -120,7 +120,7 @@ def stockInput( ):
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
     stockList = importObject( 'stock.csv', stockItem )
     stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
-    
+    MLB( )
     print ( "Stock.csv updated. But not the GUI" )
     
 ############################################################################################################################
@@ -370,7 +370,7 @@ Label( root, text = 'Stock list' ).pack( )
 
 container = ttk.Frame( )
 container.pack( fill = "both", expand = True )
-MLB = MLB( )
+mlb = MLB( )
 
 LINE = Frame( root, height = 2, width = 5000, bg = "black" )
 LINE.pack( )
