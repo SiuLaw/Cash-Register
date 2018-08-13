@@ -54,12 +54,8 @@ def importObject( csvfile, objectClass ):
         table.append( line )
         
     # Create a list of objects
-    col_title_passed = False
     for i in range( len( table ) ):
         line = table[ i ]
-        if( col_title_passed == False ):
-            col_title_passed = True
-            continue
         newObject = objectClass( line )
         objectList.append( newObject )
         
