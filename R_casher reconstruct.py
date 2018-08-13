@@ -95,14 +95,11 @@ def listToCSVtxt( input_list ):
     return output_text
 
 def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
-    if os.path.exists( csvfile ):
-        # print( csvfile + " exist." )
-        pass
-    else:
-        print( csvfile + " does not exist." )
-        file = open( csvfile , 'w')
-        file.close()
-    
+            
+    print( "Now attemping to renew CSV file" )
+    file = open( csvfile , 'w')
+    file.close()
+            
     while 0 != len( ObjectList ):
         newList = [ ]
         i = 0
@@ -111,7 +108,6 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
             newList.append ( str( popList.switcher( i ) ) )
             i += 1
         Input( csvfile, objectClass, ItemAttr, newList )
-        print( newList )
     ObjectList = importObject( csvfile, objectClass )
     
     return ObjectList
@@ -123,8 +119,9 @@ def stockInput( ):
     newList = EntriesInput( )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
     stockList = importObject( 'stock.csv', stockItem )
-    # stockList = renewCSV ( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
-    print ( "Stock updated." )
+    stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
+    
+    print ( "Stock.csv updated. But not the GUI" )
     
 ############################################################################################################################
 #GUI FUNCTION
