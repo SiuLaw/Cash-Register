@@ -5,7 +5,7 @@ import csv
 import gc
 import operator
 from tkinter import *
-import TkTreectrl as treectrl
+# import TkTreectrl as treectrl
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
 import sqlite3
@@ -96,11 +96,6 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
         print( csvfile + " is erased." )
     else:
         print( csvfile + " did not exist." )
-
-    file = open( csvfile, "a+" )
-    text = listToCSVtxt( ItemAttr ) 
-    file.write( text ) 
-    file.close
     
     print( "now attemping to renew CSV file" )
     
@@ -124,6 +119,7 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
 def stockInput( ):
     global stockList
     newList = EntriesInput( )
+    print( newList )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
     stockList = importObject( 'stock.csv', stockItem )
     print(stockList)
