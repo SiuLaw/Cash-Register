@@ -35,18 +35,13 @@ def importObject( csvfile, objectClass ):
     # initialize the objectList for output
     objectList = [ ]
     
-    # Stop the import if the csvfile does not exist
-    if ( os.path.isfile( csvfile ) == False ):
-        print( "There are no existing csv file named: " + csvfile )
-        return objectList
-    
     # Open csvfile, read and store everything into [table]
-    else:
-        file = open( csvfile, 'r')
-        spamreader = csv.reader( file, delimiter = ",")
-        table = [ ]
-        for line in spamreader:
-            table.append( line )
+    file = open( csvfile, 'r')
+    spamreader = csv.reader( file, delimiter = ",")
+    
+    table = [ ]
+    for line in spamreader:
+        table.append( line )
         
     # Create a list of objects
     col_title_passed = False
@@ -101,6 +96,11 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
         print( csvfile + " is erased." )
     else:
         print( csvfile + " did not exist." )
+
+    file = open( csvfile, "a+" )
+    text = listToCSVtxt( ItemAttr ) 
+    file.write( text ) 
+    file.close
     
     print( "now attemping to renew CSV file" )
     
@@ -109,13 +109,16 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
     while 0 != len( ObjectList ):
         newList = [ ]
         i = 0
-        popList = ObjectList.pop( )
+        popList = ObjectList.pop()
         while i < AttrLength:
             newList.append ( str( popList.switcher( i ) ) )
             i += 1
         Input( csvfile, objectClass, ItemAttr, newList )
         print( newList )
+    ObjectList = importObject( csvfile, objectClass )
     
+    return ObjectList
+
     print( "csv is now rewrited." )
 
 def stockInput( ):
@@ -123,9 +126,8 @@ def stockInput( ):
     newList = EntriesInput( )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
     stockList = importObject( 'stock.csv', stockItem )
-    print (stockList)
-    renewCSV ( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
-    stockList = importObject( 'stock.csv', stockItem )
+    print(stockList)
+    stockList = renewCSV ( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
     print ( "Stock updated." )
     
 ############################################################################################################################
