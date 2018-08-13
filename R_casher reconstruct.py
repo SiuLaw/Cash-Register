@@ -13,8 +13,6 @@ import sqlite3
 dir_path = os.path.dirname( __file__ )
 os.chdir( dir_path )
 
-stockItemAttr = [ "seller", "fandom", "maintype","bundle","price","details","stock"]
-
 ############################################################################################################################
 #NOTE
 
@@ -32,7 +30,7 @@ def inputOrDefault( inp_val, def_val ):
     else:
         return inp_val
 
-# Read csvfile -> list -> objects -> List of object
+# Import CSV into ObjectList
 def importObject( csvfile, objectClass ):
     # initialize the objectList for output
     objectList = [ ]
@@ -43,12 +41,13 @@ def importObject( csvfile, objectClass ):
         return objectList
     
     # Open csvfile, read and store everything into [table]
-    file = open( csvfile, 'r')
-    spamreader = csv.reader( file, delimiter = ",")
-    table = [ ]
-    for line in spamreader:
-        table.append( line )
-    
+    else:
+        file = open( csvfile, 'r')
+        spamreader = csv.reader( file, delimiter = ",")
+        table = [ ]
+        for line in spamreader:
+            table.append( line )
+        
     # Create a list of objects
     col_title_passed = False
     for i in range( len( table ) ):
@@ -63,14 +62,27 @@ def importObject( csvfile, objectClass ):
     
     return objectList
 
-# input stock + renew stockList
-def stockInput( ):
-    Input( 'stock.csv', stockItem, stockItemAttr ) # input stored into csv
-    stockList = importObject( 'stock.csv', stockItem ) # list of objects in python renewed
-    # delete csv
-    # rewrite stockList into new csv
+def EntriesInput ( ):
+    i = 0
+    newList = [ ]
+    while i < len( boxes ):
+        newList.append( boxes[ i ].get( ) )
+        i +=1
+    return newList
 
-# Part of input
+# Input list -> stored into csv file
+def Input( csvfile, objectClass, ItemAttr, newList ): 
+    i = 0
+    newObject = objectClass( )
+    objectAttrLength = newObject.lenAttr( )
+    del newObject
+            
+    file = open( csvfile, "a+" )
+    text = listToCSVtxt( newList )
+    file.write( text )
+    file.close
+
+# List -> CSV txt
 def listToCSVtxt( input_list ):
     output_text = ""
     length = len( input_list )
@@ -80,48 +92,42 @@ def listToCSVtxt( input_list ):
             output_text += ","
         else:
             output_text += "\n"
-    return output_text 
+    return output_text
 
-# Input -> list -> stored into csv file
-def Input( csvfile, objectClass, ItemAttr ): 
-    newAttr = [ ]
-    i = 0
-    newObject = objectClass( )
-    objectAttrLength = newObject.lenAttr( )
-    
-    #turning input into list
-    while i < objectAttrLength:
-        newAttr.append( boxes[ i ].get( ) )
-        i +=1
-    
-    #turning storing list via listToCSVtxt
-    if( os.path.isfile( csvfile ) == False ):
-            file = open( csvfile, "a+" )
-            text = listToCSVtxt( ItemAttr ) 
-            file.write( text ) 
-            file.close
-            
-    file = open( csvfile, "a+" )
-    text = listToCSVtxt( newAttr )
-    file.write( text )
-    file.close
-
-def printObjectList( objectList ):
-    for obj in objectList:
-        print( obj.__dict__ )
-
-def renewCSV ( csvfile, ListOfObject, objectClass ):
-    if os.path.exists( csvfile ):
-        os.remove( csvfile )
-        print( csvfile + "is removed.")
+def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
+    if os.path.exists ( csvfile ):
+        file = open( csvfile , 'w')
+        file.close()
+        print( csvfile + " is erased." )
     else:
-        print( csvfile + " does not exist.")
+        print( csvfile + " did not exist." )
     
+    print( "now attemping to renew CSV file" )
     
-    ListOfObject = [ ]
-    ListOfObject = importObject( csvfile, objectClass )
-    pass
+    print( ObjectList )
+    
+    while 0 != len( ObjectList ):
+        newList = [ ]
+        i = 0
+        popList = ObjectList.pop( )
+        while i < AttrLength:
+            newList.append ( str( popList.switcher( i ) ) )
+            i += 1
+        Input( csvfile, objectClass, ItemAttr, newList )
+        print( newList )
+    
+    print( "csv is now rewrited." )
 
+def stockInput( ):
+    global stockList
+    newList = EntriesInput( )
+    Input ( 'stock.csv', stockItem, stockItemAttr, newList )
+    stockList = importObject( 'stock.csv', stockItem )
+    print (stockList)
+    renewCSV ( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
+    stockList = importObject( 'stock.csv', stockItem )
+    print ( "Stock updated." )
+    
 ############################################################################################################################
 #GUI FUNCTION
 
@@ -141,12 +147,6 @@ def sortby( tree, col, descending ):
     tree.heading( col, command = lambda col = col: sortby( tree, col, int( not descending ) ) )
     for child in tree.get_children():
         print(tree.item(child)["values"][-1])
-    
-def object_BIND_TKindex(objectList, TKList):
-    
-    
-    return list
-    passprint(stockList)
 
 class MLB(object):
     # Container created in loop because for updating stocklist
@@ -352,18 +352,19 @@ class salesItem( Item ):
 #For grabbing stuff from 
 def readFile( x ):
     file = open( x , "r" )
-  
-############################################################################################################################
-#DEFAULT ITEMS
 
-#Deafult StockItem
+############################################################################################################################
+#BEFORE TKinter
+
+# Deafult StockItem
 defaultStockItem = stockItem( )
 stockItemAttrLength = defaultStockItem.lenAttr( )
 del defaultStockItem
 
-############################################################################################################################
-#OBJECT INPUT
-#Object into list
+# stockItem's Attributes
+stockItemAttr = [ "seller", "fandom", "maintype","bundle","price","details","stock"]
+
+# Importing stockList
 stockList = importObject( 'stock.csv', stockItem )
 
 ############################################################################################################################
