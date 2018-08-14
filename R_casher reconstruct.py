@@ -118,7 +118,7 @@ def stockInput( ):
     global stockList
     newList = EntriesInput( )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
-    ObjectList = importObject( csvfile , objectClass )
+    ObjectList = importObject( 'stock.csv' , stockItem )
     stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
     MLB( )
     print ( "Stock.csv updated. ")
@@ -151,6 +151,12 @@ class MLB(object):
         self.titles = [ ]
         self.popup_menu = Menu(container, tearoff = 0 )
         
+        # change Stock
+        self.changeStockWIN = None
+        self.alterStock = None
+        self.alterStockBOX = None
+        self.objectIndex = None
+        
         # functions
         self.makeList()
         self.fillList()
@@ -159,7 +165,7 @@ class MLB(object):
         
         # popup
         self.popup_menu.add_command( label = "Delete", command = self.deleteStock )
-        self.popup_menu.add_command( label = "where got", command = self.heregot)
+        self.popup_menu.add_command( label = "Change Stock", command = self.changeStock1)
         self.tree.bind( "<Button-2>", self.popup ) 
     
     # Constructing Tree
@@ -189,16 +195,6 @@ class MLB(object):
             
         print( "stock display updated" )
     
-    # def makeBinder(self):
-    #     for child in self.tree.get_children( ):
-    #         indexnumber = self.tree.index(child)
-    #         a = stockList [indexnumber]
-    #         b = self.tree.item(child)["values"][-1]
-    #         print (a) # actual object
-    #         print (b) # reference to object, now string
-    #         self.binder.append(( a, str(b) ))
-    #     print(self.binder)
-    
         #Making title
         # col.title = assign headings
         # command = sortby(tree,column, descending = 0)
@@ -218,12 +214,26 @@ class MLB(object):
         stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
         MLB( )
         
-    def changeStock(self):
+    def changeStock1(self):
+        
+        i = self.tree.selection( )
+        self.objectIndex = int(self.tree.item(i)["values"][-1])  
+
+        # WINDOW
+        self.changeStockWIN = Tk( )
+        LABEL = Label( self.changeStockWIN, text = "Now enter the new stock!").pack ( )
+        self.alterStockBOX = Entry ( self.changeStockWIN )
+        self.alterStockBOX.pack( )
+    
+        BButton = Button ( self.changeStockWIN, text = "Change Stock", command = self.fetch)
+        BButton.pack( )
+        
+    def fetch(self):
         global stockList
-        for i in self.tree.selection():
-            del_objectIndex = int(self.tree.item(i)["values"][-1])
-            stockList.pop(del_objectIndex)
-            self.tree.delete(i)
+        self.alterStock = self.alterStockBOX.get( )
+        stockList [self.objectIndex].stock = int(self.alterStock)
+        
+        stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
         MLB( )
     
     # Vertical scrollbar  
