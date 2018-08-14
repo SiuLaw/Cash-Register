@@ -269,10 +269,31 @@ class MLB( object ):
         container.grid_columnconfigure( 0, weight = 1 )
         container.grid_rowconfigure   ( 0, weight = 1 )
 
-class SALES( object ):
-    def __init__( self ):
-        self.root = Tk( )
-
+# class sINPUT ( object ):
+#     
+#     def __init__( self ):
+#         self.input = None
+#         self.Attr0 = None # Seller
+#         self.Attr1 = None # Fandom
+#         self.Attr2 = None # Maintype
+#         self.Attr3 = None # Bundle
+#         self.Attr4 = None # Price - not for selection
+#         self.Attr5 = None # Details
+#         self.Attr6 = None # Discount
+#         self.Attr7 = None # AlternativePrice
+#     
+#         #Functions
+#         self.makeList( )
+#         
+#     def makeList( self ):
+#         global stockList
+#         self.Attr0 = stockList
+#         self.Attr0 = [x for x in self.Attr0. if ]
+#         
+#         
+#     def selection ( self ):
+#         print ("hello :)")
+        
 # Entry boxes for input
 def entries( root ):
     container = Frame ( bg = "white" )
@@ -336,6 +357,7 @@ class Item:
         
     # Set the attr values with the single "list" arguments
     def initializeFromList( self, argList ):
+        
         self.seller   = inputOrDefault( argList[0], "Unknown seller" )
         self.fandom   = inputOrDefault( argList[1], "Unknown fandom" )
         self.maintype = inputOrDefault( argList[2], "Unknown type" )
@@ -394,7 +416,8 @@ class salesItem( Item ):
             4: self.price,
             5: self.details,
             6: self.discount,
-            7: self.alternativePrice
+            7: self.alternativePrice,
+            8: self.time
         }
         return switcher.get( number, 0 )
 
@@ -418,6 +441,8 @@ stockList = importObject( 'stock.csv', stockItem )
 
 ############################################################################################################################
 #TKinter
+
+#STOCK TABLE
 root = Tk( )
 
 Label( root, text = 'Stock list' ).pack( )
@@ -434,5 +459,13 @@ Label( root, text = 'New Entries' ).pack( side = "left" )
 boxes = entries( root )
 Button( root, text = "Input", command = stockInput ).pack( )
 
+#SALES TABLE
+root2 = Tk ()
+Label (root2, text = "Sales Input").pack()
+container2 = ttk.Frame( )
+container2.pack()
+salesInput = sINPUT( )
+
+#
 mainloop( )
 ############################################################################################################################
