@@ -98,7 +98,8 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
     print( "Now attemping to renew CSV file" )
     file = open( csvfile , 'w')
     file.close()
-            
+    
+    ObjectList.reverse()
     while 0 != len( ObjectList ):
         newList = [ ]
         i = 0
@@ -117,7 +118,7 @@ def stockInput( ):
     global stockList
     newList = EntriesInput( )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
-    stockList = importObject( 'stock.csv', stockItem )
+    ObjectList = importObject( csvfile , objectClass )
     stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
     MLB( )
     print ( "Stock.csv updated. ")
@@ -148,13 +149,11 @@ class MLB(object):
     def __init__(self):
         self.tree = None
         self.titles = [ ]
-        self.binder = [ ]
         self.popup_menu = Menu(container, tearoff = 0 )
         
         # functions
         self.makeList()
         self.fillList()
-        self.makeBinder()
         self.title()
         self.scroll()
         
@@ -184,20 +183,21 @@ class MLB(object):
                 stuff.append( stockList[ i ].switcher( q ) )
                 q += 1
             stuff.append( stockList[ i ] )
+            stuff.append( i ) 
             self.tree.insert( '', 'end', values = stuff )
             i += 1
             
         print( "stock display updated" )
     
-    def makeBinder(self):
-        for child in self.tree.get_children( ):
-            indexnumber = self.tree.index(child)
-            a = stockList [indexnumber]
-            b = self.tree.item(child)["values"][-1]
-            print (a)
-            print (b)
-            self.binder.append(( a, b ))
-        print(self.binder)
+    # def makeBinder(self):
+    #     for child in self.tree.get_children( ):
+    #         indexnumber = self.tree.index(child)
+    #         a = stockList [indexnumber]
+    #         b = self.tree.item(child)["values"][-1]
+    #         print (a) # actual object
+    #         print (b) # reference to object, now string
+    #         self.binder.append(( a, str(b) ))
+    #     print(self.binder)
     
         #Making title
         # col.title = assign headings
@@ -212,14 +212,19 @@ class MLB(object):
     def deleteStock(self):
         global stockList
         for i in self.tree.selection():
-            del_objectIndex = self.tree.item(i)["values"][-1]
-            print (del_objectIndex)
-            print (stockList)
-            #stockList.remove(del_objectIndex)
+            del_objectIndex = int(self.tree.item(i)["values"][-1])
+            stockList.pop(del_objectIndex)
             self.tree.delete(i)
+        stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
+        MLB( )
         
-    def heregot(self):
-        print("here got!")
+    def changeStock(self):
+        global stockList
+        for i in self.tree.selection():
+            del_objectIndex = int(self.tree.item(i)["values"][-1])
+            stockList.pop(del_objectIndex)
+            self.tree.delete(i)
+        MLB( )
     
     # Vertical scrollbar  
     def scroll(self):
