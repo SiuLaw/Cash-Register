@@ -218,13 +218,21 @@ class MLB( object ):
     # Delete stock
     def deleteStock( self ):
         global stockList
+        del_List = [ ]
         
         #Identify selected object(s) index number(s)
         for i in self.tree.selection( ):
-            del_objectIndex = int( self.tree.item( i )[ "values" ][ -1 ] ) 
-            stockList.pop( del_objectIndex )      # remove from stockList
-            self.tree.delete( i )                 # remove from tree
+            del_objectIndex = int( self.tree.item( i )[ "values" ][ -1 ] )
+            del_List.append(del_objectIndex)
+            self.tree.delete( i )   # remove from tree
         
+        # Remove from stockList
+        i = 0
+        del_List.reverse( )
+        while i != len( del_List ):
+            stockList.pop (del_List[i])   
+            i += 1
+                           
         #renew CSV + MLB
         stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
         MLB( )
@@ -459,10 +467,13 @@ Button( root, text = "Input", command = stockInput ).pack( )
 
 #SALES TABLE
 root2 = Tk ()
+
 Label (root2, text = "Sales Input").pack()
+
 container2 = ttk.Frame( )
 container2.pack()
-salesInput = sINPUT( )
+
+#salesInput = sINPUT( )
 
 #
 mainloop( )
