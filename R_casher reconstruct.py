@@ -143,8 +143,11 @@ def sortby( tree, col, descending ):
     
     # tree.heading(column, command = reversed sortby)
     tree.heading( col, command = lambda col = col: sortby( tree, col, int( not descending ) ) )
+<<<<<<< HEAD
     for child in tree.get_children( ):
         print( tree.item( child )[ "values" ][ -1 ] )
+=======
+>>>>>>> c027d4b34d41fcc31474106681f7c2832387c289
 
 class MLB( object ):
     # Container created in loop because for updating stocklist
