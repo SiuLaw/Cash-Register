@@ -95,7 +95,6 @@ def listToCSVtxt( input_list ):
     return output_text
 
 def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
-            
     print( "Now attemping to renew CSV file" )
     file = open( csvfile , 'w')
     file.close()
@@ -121,7 +120,7 @@ def stockInput( ):
     stockList = importObject( 'stock.csv', stockItem )
     stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
     MLB( )
-    print ( "Stock.csv updated. But not the GUI" )
+    print ( "Stock.csv updated. ")
     
 ############################################################################################################################
 #GUI FUNCTION
@@ -149,11 +148,13 @@ class MLB(object):
     def __init__(self):
         self.tree = None
         self.titles = [ ]
+        self.binder = [ ]
         self.popup_menu = Menu(container, tearoff = 0 )
         
         # functions
         self.makeList()
         self.fillList()
+        self.makeBinder()
         self.title()
         self.scroll()
         
@@ -182,30 +183,41 @@ class MLB(object):
             while q < stockItemAttrLength: #
                 stuff.append( stockList[ i ].switcher( q ) )
                 q += 1
-                
-            stuff.append( stockList[i] )
-
+            stuff.append( stockList[ i ] )
             self.tree.insert( '', 'end', values = stuff )
             i += 1
-        
+            
         print( "stock display updated" )
     
-    #Making title
+    def makeBinder(self):
+        for child in self.tree.get_children( ):
+            indexnumber = self.tree.index(child)
+            a = stockList [indexnumber]
+            b = self.tree.item(child)["values"][-1]
+            print (a)
+            print (b)
+            self.binder.append(( a, b ))
+        print(self.binder)
+    
+        #Making title
         # col.title = assign headings
         # command = sortby(tree,column, descending = 0)
     def title(self):
         for col in self.titles:
             self.tree.heading( col, text = col.title(), command = lambda c = col: sortby( self.tree, c, 0 ) )
-    
+        
     def popup(self, event):
         self.popup_menu.post(event.x_root, event.y_root)
     
     def deleteStock(self):
+        global stockList
         for i in self.tree.selection():
-            del_index = self.tree.index(i)
+            del_objectIndex = self.tree.item(i)["values"][-1]
+            print (del_objectIndex)
+            print (stockList)
+            #stockList.remove(del_objectIndex)
             self.tree.delete(i)
         
-    
     def heregot(self):
         print("here got!")
     
