@@ -121,7 +121,7 @@ def stockInput( ):
     
     newList = EntriesInput( )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
-    ObjectList = importObject( 'stock.csv' , stockItem )
+    stockList = importObject( 'stock.csv' , stockItem )
     stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
     MLB( )
     print ( "Stock.csv updated. ")
@@ -154,17 +154,17 @@ class MLB( object ):
         self.titles = [ ]
         self.popup_menu = Menu(container, tearoff = 0 )
         
-        # Change stock
-        self.changeStockWIN = None
-        self.alterStock = None
-        self.alterStockBOX = None
-        self.objectIndex = None
-        
         # Functions
         self.makeList( )
         self.fillList( )
         self.title( )
         self.scroll( )
+        
+        # Change stock
+        self.changeStockWIN = None
+        self.alterStock = None
+        self.alterStockBOX = None
+        self.objectIndex = None
         
         # Popup window
         self.popup_menu.add_command( label = "Delete", command = self.deleteStock )
@@ -268,6 +268,10 @@ class MLB( object ):
     
         container.grid_columnconfigure( 0, weight = 1 )
         container.grid_rowconfigure   ( 0, weight = 1 )
+
+class SALES( object ):
+    def __init__( self ):
+        self.root = Tk( )
 
 # Entry boxes for input
 def entries( root ):
