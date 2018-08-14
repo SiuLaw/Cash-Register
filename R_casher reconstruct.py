@@ -32,7 +32,7 @@ def inputOrDefault( inp_val, def_val ):
 
 # Import CSV into ObjectList
 def importObject( csvfile, objectClass ):
-    # initialize the objectList for output
+    # initialize objectList for output
     objectList = [ ]
     
     # Check that csv exists
@@ -72,7 +72,7 @@ def EntriesInput ( ):
     return newList
 
 # Input list -> stored into csv file
-def Input( csvfile, objectClass, ItemAttr, newList ): 
+def Input( csvfile, objectClass, ItemAttr, newList ):
     newObject = objectClass( )
     objectAttrLength = newObject.lenAttr( )
     del newObject
@@ -83,7 +83,7 @@ def Input( csvfile, objectClass, ItemAttr, newList ):
     file.close
 
 # List -> CSV txt
-def listToCSVtxt( input_list ):
+def listToCSVtxt( input_list ): 
     output_text = ""
     length = len( input_list )
     for i in range( length ):
@@ -94,6 +94,7 @@ def listToCSVtxt( input_list ):
             output_text += "\n"
     return output_text
 
+# Erase CSV -> Use ObjectList to restore CSV
 def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
     print( "Now attemping to renew CSV file" )
     file = open( csvfile , 'w')
@@ -114,8 +115,10 @@ def renewCSV ( csvfile, objectClass, ItemAttr, ObjectList, AttrLength):
 
     print( "csv is now rewrited." )
 
+# Input entires into newList -> Store newList -> import from CSV -> renew CSV -> renew MLB
 def stockInput( ):
     global stockList
+    
     newList = EntriesInput( )
     Input ( 'stock.csv', stockItem, stockItemAttr, newList )
     ObjectList = importObject( 'stock.csv' , stockItem )
@@ -131,7 +134,7 @@ def sortby( tree, col, descending ):
     # Making a list of [column,content]
         # tree.set = returns value of the specific column
         # tree.get_children = returns list of children belonging to items
-    data = [( tree.set( child, col ), child ) for child in tree.get_children('')]
+    data = [ ( tree.set( child, col ), child ) for child in tree.get_children( '' ) ]
     
     # Sorting list
     data.sort( reverse = descending )
@@ -140,36 +143,36 @@ def sortby( tree, col, descending ):
     
     # tree.heading(column, command = reversed sortby)
     tree.heading( col, command = lambda col = col: sortby( tree, col, int( not descending ) ) )
-    for child in tree.get_children():
-        print(tree.item(child)["values"][-1])
+    for child in tree.get_children( ):
+        print( tree.item( child )[ "values" ][ -1 ] )
 
-class MLB(object):
+class MLB( object ):
     # Container created in loop because for updating stocklist
     
-    def __init__(self):
+    def __init__( self ):
         self.tree = None
         self.titles = [ ]
         self.popup_menu = Menu(container, tearoff = 0 )
         
-        # change Stock
+        # Change stock
         self.changeStockWIN = None
         self.alterStock = None
         self.alterStockBOX = None
         self.objectIndex = None
         
-        # functions
-        self.makeList()
-        self.fillList()
-        self.title()
-        self.scroll()
+        # Functions
+        self.makeList( )
+        self.fillList( )
+        self.title( )
+        self.scroll( )
         
-        # popup
+        # Popup window
         self.popup_menu.add_command( label = "Delete", command = self.deleteStock )
-        self.popup_menu.add_command( label = "Change Stock", command = self.changeStock1)
-        self.tree.bind( "<Button-2>", self.popup ) 
+        self.popup_menu.add_command( label = "Change Stock", command = self.changeStock )
+        self.tree.bind( "<Button-2>", self.popup ) # binding right click to popup window
     
     # Constructing Tree
-    def makeList(self):
+    def makeList( self ):
         i = 0
         while i < stockItemAttrLength:
             self.titles.append( str( stockItemAttr[ i ] ).capitalize( ) ) 
@@ -177,67 +180,86 @@ class MLB(object):
         self.tree = ttk.Treeview( column = self.titles, show = "headings" )
         
     # Filling Tree
-    def fillList(self):
+    def fillList( self ):
         global stockList
         global stockItemAttrLength
         
+         
         i = 0
         while i < len( stockList ): 
             q = 0
             stuff = [ ]
-            while q < stockItemAttrLength: #
+            
+            # stockList -> List of Object attributes
+            while q < stockItemAttrLength: 
                 stuff.append( stockList[ i ].switcher( q ) )
                 q += 1
-            stuff.append( stockList[ i ] )
-            stuff.append( i ) 
+            
+            # Adding tags
+            stuff.append( stockList[ i ] )  # Tagging object name
+            stuff.append( i )               # Tagging object index number in stockList
+            
+            # Insert list of object attributes into tree
             self.tree.insert( '', 'end', values = stuff )
             i += 1
             
         print( "stock display updated" )
     
-        #Making title
+    # Making title
+    def title( self ):
         # col.title = assign headings
         # command = sortby(tree,column, descending = 0)
-    def title(self):
+        
         for col in self.titles:
             self.tree.heading( col, text = col.title(), command = lambda c = col: sortby( self.tree, c, 0 ) )
-        
-    def popup(self, event):
-        self.popup_menu.post(event.x_root, event.y_root)
     
-    def deleteStock(self):
+    # Popup window when right clicked
+    def popup( self, event ):
+        self.popup_menu.post( event.x_root, event.y_root )
+    
+    # Delete stock
+    def deleteStock( self ):
         global stockList
-        for i in self.tree.selection():
-            del_objectIndex = int(self.tree.item(i)["values"][-1])
-            stockList.pop(del_objectIndex)
-            self.tree.delete(i)
+        
+        #Identify selected object(s) index number(s)
+        for i in self.tree.selection( ):
+            del_objectIndex = int( self.tree.item( i )[ "values" ][ -1 ] ) 
+            stockList.pop( del_objectIndex )      # remove from stockList
+            self.tree.delete( i )                 # remove from tree
+        
+        #renew CSV + MLB
         stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
         MLB( )
+    
+    # Change stock
+    def changeStock( self ):
         
-    def changeStock1(self):
-        
+        # Identify selected object's index number
         i = self.tree.selection( )
-        self.objectIndex = int(self.tree.item(i)["values"][-1])  
+        self.objectIndex = int( self.tree.item( i )[ "values" ][ -1 ] )   
 
-        # WINDOW
         self.changeStockWIN = Tk( )
-        LABEL = Label( self.changeStockWIN, text = "Now enter the new stock!").pack ( )
+        
+        # change stock WINDOW
+        Label( self.changeStockWIN, text = "Now enter the new stock!").pack ( )
         self.alterStockBOX = Entry ( self.changeStockWIN )
         self.alterStockBOX.pack( )
+        Button ( self.changeStockWIN, text = "Change Stock", command = self.fetch ).pack( )
     
-        BButton = Button ( self.changeStockWIN, text = "Change Stock", command = self.fetch)
-        BButton.pack( )
-        
-    def fetch(self):
+    # Change stock Pt2 - Fetching new user input 
+    def fetch( self ):
         global stockList
-        self.alterStock = self.alterStockBOX.get( )
-        stockList [self.objectIndex].stock = int(self.alterStock)
         
+        # Take input from user and change stock in stockList
+        self.alterStock = self.alterStockBOX.get( )
+        stockList [ self.objectIndex ].stock = int( self.alterStock )
+        
+        # renew CSV + MLB
         stockList = renewCSV( 'stock.csv', stockItem, stockItemAttr, stockList, stockItemAttrLength )
         MLB( )
     
     # Vertical scrollbar  
-    def scroll(self):
+    def scroll( self ):
         vsb = ttk.Scrollbar( orient="vertical", command = self.tree.yview )
         self.tree.configure( yscrollcommand = vsb.set )
         
@@ -246,7 +268,8 @@ class MLB(object):
     
         container.grid_columnconfigure( 0, weight = 1 )
         container.grid_rowconfigure   ( 0, weight = 1 )
-        
+
+# Entry boxes for input
 def entries( root ):
     container = Frame ( bg = "white" )
     container.pack( fill = "both", expand = True )
@@ -259,7 +282,7 @@ def entries( root ):
         Label( root, text = title ).grid( row = 0, column = i, in_ = container )
         i += 1
     
-    #Creating entries boxes
+    #Creating entry boxes
     i = 0
     boxes = [ ]
     while i < stockItemAttrLength:
