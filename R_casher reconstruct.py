@@ -5,10 +5,10 @@ import csv
 import gc
 import operator
 from tkinter import *
-# import TkTreectrl as treectrl
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
 import sqlite3
+from collections import OrderedDict
 
 dir_path = os.path.dirname( __file__ )
 os.chdir( dir_path )
@@ -182,7 +182,6 @@ class MLB( object ):
         global stockList
         global stockItemAttrLength
         
-         
         i = 0
         while i < len( stockList ): 
             q = 0
@@ -275,30 +274,43 @@ class MLB( object ):
         container.grid_columnconfigure( 0, weight = 1 )
         container.grid_rowconfigure   ( 0, weight = 1 )
 
-# class sINPUT ( object ):
-#     
-#     def __init__( self ):
-#         self.input = None
-#         self.Attr0 = None # Seller
-#         self.Attr1 = None # Fandom
-#         self.Attr2 = None # Maintype
-#         self.Attr3 = None # Bundle
-#         self.Attr4 = None # Price - not for selection
-#         self.Attr5 = None # Details
-#         self.Attr6 = None # Discount
-#         self.Attr7 = None # AlternativePrice
-#     
-#         #Functions
-#         self.makeList( )
-#         
-#     def makeList( self ):
-#         global stockList
-#         self.Attr0 = stockList
-#         self.Attr0 = [x for x in self.Attr0. if ]
-#         
-#         
-#     def selection ( self ):
-#         print ("hello :)")
+class sINPUT ( object ):
+    
+    def __init__( self ):
+        self.input = None
+        self.Attr0 = self.filterSelection(0) # Seller
+        self.Attr1 = [ ] # Fandom
+        self.Attr2 = [ ] # Maintype
+        self.Attr3 = [ ] # Bundle
+        self.Attr5 = [ ] # Details
+        self.Attr6 = False # Discount
+        self.Attr7 = None # AlternativePrice
+    
+        #Functions
+        
+
+    def filterSelection ( self, i):
+        global stockList
+        
+        # Make a list of existing attributes
+        tempAttr = [ ]
+        for items in stockList:
+            tempAttr.append(items.switcher(i))
+        
+        # Delete duplication from Attr
+        Attr = list(dict.fromkeys(tempAttr))
+        return Attr
+    
+        self.radioButton( )
+    
+    def radioButton ( self, Attr):
+        print(Attr)
+        v = IntVar
+        i = 0
+        for items in Attr:
+            Radiobutton(root2, text = str(items), padx = 20, variable=v, command = self.filterSelection (i+1), value=i).pack(anchor=W)
+            i += 1
+
         
 # Entry boxes for input
 def entries( root ):
@@ -473,7 +485,7 @@ Label (root2, text = "Sales Input").pack()
 container2 = ttk.Frame( )
 container2.pack()
 
-#salesInput = sINPUT( )
+salesInput = sINPUT( )
 
 #
 mainloop( )
