@@ -277,39 +277,81 @@ class MLB( object ):
 class sINPUT ( object ):
     
     def __init__( self ):
-        self.input = None
-        self.Attr0 = self.filterSelection(0) # Seller
-        self.Attr1 = [ ] # Fandom
-        self.Attr2 = [ ] # Maintype
-        self.Attr3 = [ ] # Bundle
-        self.Attr5 = [ ] # Details
-        self.Attr6 = False # Discount
-        self.Attr7 = None # AlternativePrice
-    
-        #Functions
-        
-
-    def filterSelection ( self, i):
         global stockList
         
+        self.input = None
+        self.tempList = [ ] # for .modifier( )    - storing and moving selected List
+        self.tempAttr = [ ] # for .radioButton( ) - showing only uniqued attributes
+        
+        # Filtered unique attributes
+        self.Attr0 = False # Seller
+        self.Attr1 = False # Fandom
+        self.Attr2 = False # Maintype
+        self.Attr3 = False # Bundle
+        self.Attr5 = False # Details
+        self.Attr6 = False # Discount
+        self.Attr7 = False # AlternativePrice
+    
+        #Functions
+            
+    def TFswitcher( self, number ):
+        swticher = {
+            0: self.Attr0,
+            1: self.Attr1,
+            2: self.Attr2,
+            3: self.Attr3,
+            4: self.Attr4,
+            5: self.Attr5,
+            6: self.Attr6,
+            7: self.Attr7
+        }
+        return switcher.get( number , 0 )
+      
+    def regulator( self, i ):
+        self.TFswitcher( i ) = True
+        
+      
+    # Filter for only selected items
+    def filter( self, i ):
+        self.tempList = [ ]
+        
+        # Does not filter for Attr0
+        if i == 0:
+            global stockList
+            self.tempList = stockList
+            pass
+        
+        # Filter so that only the selected attribute will remain on the list
+        else:
+            self.input = v.get ( )
+            
+            # Select objects that had the attribute at i location
+            for items in self.input, items.switcher(i) == self.input:
+                self.tempList.append( items )
+        
+        return self.tempList
+
+    # Modify list for radioButton display
+    def modifier( self, i):
+        
         # Make a list of existing attributes
-        tempAttr = [ ]
-        for items in stockList:
-            tempAttr.append(items.switcher(i))
+        self.tempAttr = [ ]
+        
+        for items in self.tempList:
+            tempAttr.append( items.switcher( i ) )
         
         # Delete duplication from Attr
-        Attr = list(dict.fromkeys(tempAttr))
-        return Attr
+        self.tempAttr = list( dict.fromkeys( tempAttr ) )
     
-        self.radioButton( )
+        self.radioButton( i )
     
-    def radioButton ( self, Attr):
-        print(Attr)
+    def radioButton( self, i):
         v = IntVar
-        i = 0
-        for items in Attr:
-            Radiobutton(root2, text = str(items), padx = 20, variable=v, command = self.filterSelection (i+1), value=i).pack(anchor=W)
-            i += 1
+        
+        q = 0
+        for items in self.tempAttr:
+            Radiobutton(root2, text = str(items), padx = 20, variable = v, command = regulator(i), value= q).pack(anchor=W)
+            q += 1
 
         
 # Entry boxes for input
