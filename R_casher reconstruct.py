@@ -282,34 +282,13 @@ class sINPUT ( object ):
         self.input = None
         self.tempList = [ ] # for .modifier( )    - storing and moving selected List
         self.tempAttr = [ ] # for .radioButton( ) - showing only uniqued attributes
-        
-        # Filtered unique attributes
-        self.Attr0 = False # Seller
-        self.Attr1 = False # Fandom
-        self.Attr2 = False # Maintype
-        self.Attr3 = False # Bundle
-        self.Attr5 = False # Details
-        self.Attr6 = False # Discount
-        self.Attr7 = False # AlternativePrice
+        self.gate = False
     
-        #Functions
-            
-    def TFswitcher( self, number ):
-        swticher = {
-            0: self.Attr0,
-            1: self.Attr1,
-            2: self.Attr2,
-            3: self.Attr3,
-            4: self.Attr4,
-            5: self.Attr5,
-            6: self.Attr6,
-            7: self.Attr7
-        }
-        return switcher.get( number , 0 )
-      
+    def runrun( self ):
+        pass
+    
     def regulator( self, i ):
-        self.TFswitcher( i ) = True
-        
+        self.gate = True
       
     # Filter for only selected items
     def filter( self, i ):
@@ -347,6 +326,7 @@ class sINPUT ( object ):
     
     def radioButton( self, i):
         v = IntVar
+        self.gate = False
         
         q = 0
         for items in self.tempAttr:
