@@ -3,10 +3,13 @@
 import os
 import csv
 import gc
+
 import operator
+
 from tkinter import *
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
+
 import sqlite3
 from collections import OrderedDict
 
@@ -280,15 +283,26 @@ class sINPUT ( object ):
         global stockList
         
         self.input = None
+        self.output = [ ]   # for recording user input and write in CSV 
         self.tempList = [ ] # for .modifier( )    - storing and moving selected List
         self.tempAttr = [ ] # for .radioButton( ) - showing only uniqued attributes
+        self.RBList = [ ]   # for storing all the RadioButtons
+        self.RBCount = 0    # RadioButton set made
         self.gate = False
-    
-    def runrun( self ):
-        pass
+        self.v = None
+        
+        self.filter (0)
+        self.modifier (0)
+        self.RB(0)
     
     def regulator( self, i ):
-        self.gate = True
+        if self.input is True:
+            self.gate = True
+        else:
+            self.gate = False
+        print (self.gate)
+        print(self.v.get())
+        
       
     # Filter for only selected items
     def filter( self, i ):
@@ -298,18 +312,17 @@ class sINPUT ( object ):
         if i == 0:
             global stockList
             self.tempList = stockList
-            pass
+            return
         
         # Filter so that only the selected attribute will remain on the list
         else:
-            self.input = v.get ( )
+            self.tempList = [ ]
+            self.input = self.v.get ( )
             
             # Select objects that had the attribute at i location
             for items in self.input, items.switcher(i) == self.input:
                 self.tempList.append( items )
-        
-        return self.tempList
-
+ 
     # Modify list for radioButton display
     def modifier( self, i):
         
@@ -317,23 +330,34 @@ class sINPUT ( object ):
         self.tempAttr = [ ]
         
         for items in self.tempList:
-            tempAttr.append( items.switcher( i ) )
+            self.tempAttr.append( str( items.switcher( i ).capitalize( ) ) )
         
         # Delete duplication from Attr
-        self.tempAttr = list( dict.fromkeys( tempAttr ) )
+        self.tempAttr = list(dict.fromkeys( self.tempAttr ) )
+        
+        # Change List into str + sort list
+        for items in self.tempAttr:
+            items = str(items)
+        self.tempAttr.sort()
     
-        self.radioButton( i )
-    
-    def radioButton( self, i):
-        v = IntVar
+    def RB( self, i):
+        
         self.gate = False
         
-        q = 0
-        for items in self.tempAttr:
-            Radiobutton(root2, text = str(items), padx = 20, variable = v, command = regulator(i), value= q).pack(anchor=W)
-            q += 1
-
+        # q = 0
+        # for items in self.tempAttr:
+        #     self.v = StringVar( )
+        #     self.v.set( str(items) )
+        #     self.RBList.append( self.v )
+        #     Radiobutton(root2, text = str(items), padx = 20, variable = self.v, command = self.regulator( i ), value = q ).pack(side = LEFT)
+        #     q += 1
         
+        self.v = StringVar( )
+        self.v.set( "no selection" )
+        
+        for displaytext,vv in self.tempAttr:
+            Radiobutton( root2, text = displaytext, variable = self.v, value = vv).pack( )
+            
 # Entry boxes for input
 def entries( root ):
     container = Frame ( bg = "white" )
